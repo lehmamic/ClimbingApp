@@ -10,6 +10,6 @@ namespace ClimbingApp.Routes.Entities
 
         public string Description { get; set; }
 
-        public IEnumerable<ClimbingRoute> Routes { get; set; }
+        public ICollection<ClimbingRoute> Routes { get; set; }
     }
 }
