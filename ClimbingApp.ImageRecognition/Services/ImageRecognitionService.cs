@@ -200,7 +200,7 @@ namespace ClimbingApp.ImageRecognition.Services
 
         private GoogleCredential CreateCredentials()
         {
-            return GoogleCredential.FromFile("/Users/lehmamic/Data/Misc/ClimbingApp/ClimbingApp/ClimbingApp-19fecc5a0422.json");
+            return GoogleCredential.FromFile("/Users/lehmamic/Data/Misc/ClimbingApp/ClimbingApp/ClimbingApp-8385749116e7.json");
         }
 
         private async Task<QueryResult> GetSimilarProductsFile(ImageAnnotatorClient imageAnnotatorClient, GetSimilarProductsOptions opts)

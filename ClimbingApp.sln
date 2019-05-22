@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClimbingApp.ImageRecognition", "ClimbingApp.ImageRecognition\ClimbingApp.ImageRecognition.csproj", "{100FC7C8-A9D4-4086-9D41-28A0E5FD6A85}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClimbingApp.Routes", "ClimbingApp.Routes\ClimbingApp.Routes.csproj", "{7E014560-349C-4F65-849B-04EB5DDA6B17}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,5 +15,9 @@ Global
 		{100FC7C8-A9D4-4086-9D41-28A0E5FD6A85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{100FC7C8-A9D4-4086-9D41-28A0E5FD6A85}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{100FC7C8-A9D4-4086-9D41-28A0E5FD6A85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E014560-349C-4F65-849B-04EB5DDA6B17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E014560-349C-4F65-849B-04EB5DDA6B17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E014560-349C-4F65-849B-04EB5DDA6B17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E014560-349C-4F65-849B-04EB5DDA6B17}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
