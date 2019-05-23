@@ -7,7 +7,7 @@ using ClimbingApp.Routes.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Raven.Client.Documents.Session;
 
-namespace ClimbingApp.Routes.Controllers
+namespace ClimbingApp.Routes.Controllers.ClimbingRoutes
 {
     [Route("api/sites/{siteId}/[controller]")]
     [ApiController]
@@ -104,7 +104,7 @@ namespace ClimbingApp.Routes.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete([FromRoute]string siteId, [FromRoute]int id)
+        public async Task<ActionResult> Delete([FromRoute]string siteId, [FromRoute]string id)
         {
             ClimbingSite site = await this.documentSession.LoadAsync<ClimbingSite>(siteId);
             if (site == null)

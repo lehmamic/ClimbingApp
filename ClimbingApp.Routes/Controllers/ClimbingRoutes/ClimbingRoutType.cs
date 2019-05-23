@@ -1,4 +1,4 @@
-﻿namespace ClimbingApp.Routes.Controllers
+﻿namespace ClimbingApp.Routes.Controllers.ClimbingRoutes
 {
     public enum ClimbingRoutType
     {

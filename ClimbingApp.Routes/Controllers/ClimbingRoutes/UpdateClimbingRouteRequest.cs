@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ClimbingApp.Routes.Controllers
+namespace ClimbingApp.Routes.Controllers.ClimbingRoutes
 {
-    public class CreateClimbingRouteRequest
+    public class UpdateClimbingRouteRequest
     {
         [MaxLength(100)]
         [MinLength(1)]

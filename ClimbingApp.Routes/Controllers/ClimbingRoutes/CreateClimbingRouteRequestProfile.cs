@@ -2,7 +2,7 @@
 using AutoMapper;
 using ClimbingApp.Routes.Entities;
 
-namespace ClimbingApp.Routes.Controllers
+namespace ClimbingApp.Routes.Controllers.ClimbingRoutes
 {
     public class CreateClimbingRouteRequestMappingProfile : Profile
     {
