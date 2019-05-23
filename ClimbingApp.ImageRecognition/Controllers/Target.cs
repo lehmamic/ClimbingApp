@@ -5,12 +5,10 @@ namespace ClimbingApp.ImageRecognition.Controllers
 {
     public class Target
     {
-        [MinLength(1)]
-        [MaxLength(100)]
+        [Required]
         public string Id { get; set; }
 
-        [MinLength(1)]
-        [MaxLength(100)]
+        [Required]
         public string DisplayName { get; set; }
 
         [Required]

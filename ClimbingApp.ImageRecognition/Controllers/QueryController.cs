@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ClimbingApp.ImageRecognition.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClimbingApp.ImageRecognition.Controllers
@@ -16,8 +17,10 @@ namespace ClimbingApp.ImageRecognition.Controllers
             this.imageRecognition = imageRecognition ?? throw new ArgumentNullException(nameof(imageRecognition));
         }
 
-        // POST api/query
-        [HttpPost()]
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> QueryTargets([FromBody]Query query)
         {
             if (!this.ModelState.IsValid)

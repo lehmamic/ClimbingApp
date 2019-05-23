@@ -4,12 +4,12 @@ namespace ClimbingApp.Routes.Controllers.ClimbingRoutes
 {
     public class CreateClimbingRouteRequest
     {
-        [MaxLength(100)]
-        [MinLength(1)]
+        [Required]
         public string Name { get; set; }
 
         public string Description { get; set; }
 
+        [Required]
         [RegularExpression("[0-9][abcABC]")]
         public string Grade { get; set; }
 

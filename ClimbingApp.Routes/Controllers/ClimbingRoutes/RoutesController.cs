@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using ClimbingApp.Routes.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Raven.Client.Documents.Session;
 
 namespace ClimbingApp.Routes.Controllers.ClimbingRoutes
 {
-    [Route("api/sites/{siteId}/[controller]")]
+    [Route("api/v1/sites/{siteId}/[controller]")]
     [ApiController]
     public class RoutesController : ControllerBase
     {
@@ -23,6 +24,8 @@ namespace ClimbingApp.Routes.Controllers.ClimbingRoutes
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<ClimbingRouteResponse>>> Get([FromRoute]string siteId)
         {
             ClimbingSite site = await this.documentSession.LoadAsync<ClimbingSite>(siteId);
@@ -36,6 +39,8 @@ namespace ClimbingApp.Routes.Controllers.ClimbingRoutes
         }
 
         [HttpGet("{id}", Name = "GetClimbingRoute")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ClimbingRouteResponse>> Get([FromRoute]string siteId, [FromRoute]string id)
         {
             ClimbingSite site = await this.documentSession.LoadAsync<ClimbingSite>(siteId);
@@ -55,6 +60,9 @@ namespace ClimbingApp.Routes.Controllers.ClimbingRoutes
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ClimbingRouteResponse>> Post([FromRoute]string siteId, [FromBody] CreateClimbingRouteRequest value)
         {
             if (!this.ModelState.IsValid)
@@ -78,6 +86,9 @@ namespace ClimbingApp.Routes.Controllers.ClimbingRoutes
         }
 
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Put([FromRoute]string siteId, [FromRoute]string id, [FromBody] UpdateClimbingRouteRequest value)
         {
             if (!this.ModelState.IsValid)
@@ -104,6 +115,7 @@ namespace ClimbingApp.Routes.Controllers.ClimbingRoutes
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> Delete([FromRoute]string siteId, [FromRoute]string id)
         {
             ClimbingSite site = await this.documentSession.LoadAsync<ClimbingSite>(siteId);
