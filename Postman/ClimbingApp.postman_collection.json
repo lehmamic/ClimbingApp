@@ -1,0 +1,310 @@
+{
+	"info": {
+		"_postman_id": "e3420c3d-57b6-4733-b069-61d02b1eba38",
+		"name": "ClimbingApp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:5001/api/v1/sites",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/sites",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"sites"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5001/api/v1/sites/{id}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/sites/35c6467a-2c2e-43bf-b69a-4c6095b08d57",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"sites",
+						"35c6467a-2c2e-43bf-b69a-4c6095b08d57"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5001/api/v1/sites/{id}",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/sites/35c6467a-2c2e-43bf-b69a-4c6095b08d57",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"sites",
+						"35c6467a-2c2e-43bf-b69a-4c6095b08d57"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://localhost:5001/api/v1/sites",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"6a Plus\"\n}"
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/sites",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"sites"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://localhost:5001/api/v1/sites/{id}",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"6a Plus\",\n\t\"description\": \"test\"\n}"
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/sites/35c6467a-2c2e-43bf-b69a-4c6095b08d57",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"sites",
+						"35c6467a-2c2e-43bf-b69a-4c6095b08d57"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5001/api/v1/sites/{id}/routes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/sites/2b5259ce-4ab2-46d1-8f1e-1a12905120e0/routes",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"sites",
+						"2b5259ce-4ab2-46d1-8f1e-1a12905120e0",
+						"routes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5001/api/v1/sites/{siteId}/routes/{id}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/sites/2b5259ce-4ab2-46d1-8f1e-1a12905120e0/routes/3776c338-7ee7-4a41-aa4a-fe755e6e97f7",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"sites",
+						"2b5259ce-4ab2-46d1-8f1e-1a12905120e0",
+						"routes",
+						"3776c338-7ee7-4a41-aa4a-fe755e6e97f7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://localhost:5001/api/v1/sites/{siteId}/routes",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\n        \"name\": \"\",\n        \"description\": null,\n        \"grade\": \"6a\",\n        \"type\": 0\n    }"
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/sites/2b5259ce-4ab2-46d1-8f1e-1a12905120e0/routes",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"sites",
+						"2b5259ce-4ab2-46d1-8f1e-1a12905120e0",
+						"routes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://localhost:5001/api/v1/sites/{siteId}/routes/{id}",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\n        \"name\": \"7a Mana\",\n        \"description\": null,\n        \"grade\": \"7a\",\n        \"type\": 0\n    }"
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/sites/2b5259ce-4ab2-46d1-8f1e-1a12905120e0/routes/3776c338-7ee7-4a41-aa4a-fe755e6e97f7",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"sites",
+						"2b5259ce-4ab2-46d1-8f1e-1a12905120e0",
+						"routes",
+						"3776c338-7ee7-4a41-aa4a-fe755e6e97f7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://localhost:5001/api/v1/sites/{siteId}/routes/{id}",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/v1/sites/2b5259ce-4ab2-46d1-8f1e-1a12905120e0/routes/3776c338-7ee7-4a41-aa4a-fe755e6e97f7",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"sites",
+						"2b5259ce-4ab2-46d1-8f1e-1a12905120e0",
+						"routes",
+						"3776c338-7ee7-4a41-aa4a-fe755e6e97f7"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
