@@ -58,6 +58,16 @@ namespace ClimbingApp.Routes
                 return new Mapper(config);
             });
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("default", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyHeader()
+                           .AllowAnyMethod();
+                });
+            });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -74,6 +84,7 @@ namespace ClimbingApp.Routes
                 app.UseHsts();
             }
 
+            app.UseCors("default");
             app.UseHttpsRedirection();
             app.UseMvc();
         }

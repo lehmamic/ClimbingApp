@@ -54,7 +54,7 @@ namespace ClimbingApp.ImageRecognition.Services
                 {
                     ProjectID = "climbingapp-241211",
                     ComputeRegion = "europe-west1",
-                    ProductID = targetId.ToString(),
+                    ProductID = targetId,
                     ProductCategory = "apparel",
                     DisplayName = "6aPlus-Schieber",
                 };
@@ -64,7 +64,7 @@ namespace ClimbingApp.ImageRecognition.Services
                 {
                     ProjectID = "climbingapp-241211",
                     ComputeRegion = "europe-west1",
-                    ProductID = targetId.ToString(),
+                    ProductID = targetId,
                     ProductSetId = "climbing-routes-1",
                 };
                 await this.AddProductToProductSet(client, addProductOptions);
@@ -74,8 +74,8 @@ namespace ClimbingApp.ImageRecognition.Services
                 {
                     ProjectID = "climbingapp-241211",
                     ComputeRegion = "europe-west1",
-                    ProductID = targetId.ToString(),
-                    ReferenceImageID = targetId.ToString(),
+                    ProductID = targetId,
+                    ReferenceImageID = targetId,
                     ReferenceImageURI = $"gs://climbing-routes-images/{targetId}",
                 };
                 await this.CreateReferenceImage(client, createReferenceImageOptions);

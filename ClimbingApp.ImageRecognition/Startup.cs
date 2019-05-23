@@ -20,6 +20,17 @@ namespace ClimbingApp.ImageRecognition
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IImageRecognitionService, ImageRecognitionService>();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("default", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyHeader()
+                           .AllowAnyMethod();
+                });
+            });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -36,6 +47,7 @@ namespace ClimbingApp.ImageRecognition
                 app.UseHsts();
             }
 
+            app.UseCors("default");
             app.UseHttpsRedirection();
             app.UseMvc();
         }
