@@ -1,0 +1,12 @@
+@mixin ion-header-theme($theme) {
+    $primary: map-get($theme, primary);
+    $accent: map-get($theme, accent);
+    $warn: map-get($theme, warn);
+    $background: map-get($theme, background);
+    $foreground: map-get($theme, foreground);
+  
+    ion-header {
+        color: mat-color($primary, default-contrast);
+        background: mat-color($primary, 500);
+    }
+}

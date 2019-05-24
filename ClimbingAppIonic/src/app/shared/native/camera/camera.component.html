@@ -1,0 +1,11 @@
+<form [formGroup]="form" class="camera-form">
+    <mat-form-field class="input-full-width">
+        <ngx-mat-file-input formControlName="requiredfile" placeholder="Camera Image"></ngx-mat-file-input>
+    </mat-form-field>
+    <div>
+        <img [src]="imageUrl">
+    </div>
+    <div>
+        <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="submit()">Submit</button>
+    </div>
+</form>

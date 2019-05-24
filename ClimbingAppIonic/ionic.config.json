@@ -1,0 +1,7 @@
+{
+  "name": "ClimbingAppIonic",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

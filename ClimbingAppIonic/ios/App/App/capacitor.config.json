@@ -1,0 +1,7 @@
+{
+  "appId": "diskordia.climbingapp",
+  "appName": "ClimbingAppIonic",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www"
+}
