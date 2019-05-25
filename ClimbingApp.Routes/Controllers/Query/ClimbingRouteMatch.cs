@@ -1,6 +1,8 @@
-﻿namespace ClimbingApp.Routes.Controllers.ClimbingRoutes
+﻿using ClimbingApp.Routes.Controllers.ClimbingRoutes;
+
+namespace ClimbingApp.Routes.Controllers.Query
 {
-    public class ClimbingRouteResponse
+    public class ClimbingRouteMatch
     {
         public string Id { get; set; }
 

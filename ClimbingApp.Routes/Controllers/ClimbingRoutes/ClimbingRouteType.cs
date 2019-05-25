@@ -1,6 +1,6 @@
 ﻿namespace ClimbingApp.Routes.Controllers.ClimbingRoutes
 {
-    public enum ClimbingRoutType
+    public enum ClimbingRouteType
     {
         None,
         SportClimbing,

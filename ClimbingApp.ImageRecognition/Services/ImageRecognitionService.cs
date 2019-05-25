@@ -109,7 +109,10 @@ namespace ClimbingApp.ImageRecognition.Services
             }
             catch(AnnotateImageException e)
             {
-                throw new TargetNotFoundException("No target with a similar image has been found.", e);
+                return new QueryResult
+                {
+                    Results = new QueryResultEntry[0],
+                };
             }
             finally
             {

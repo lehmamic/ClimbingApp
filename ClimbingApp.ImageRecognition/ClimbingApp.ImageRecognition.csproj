@@ -15,6 +15,7 @@
   <ItemGroup>
     <Compile Remove="Controllers\ValuesController.cs" />
     <Compile Remove="Services\QueryResultCodes.cs" />
+    <Compile Remove="Services\TargetNotFoundException.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\" />

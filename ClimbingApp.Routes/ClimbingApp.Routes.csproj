@@ -16,6 +16,9 @@
     <Folder Include="Entities\" />
     <Folder Include="Controllers\ClimbingRoutes\" />
     <Folder Include="Controllers\ClimbingSites\" />
+    <Folder Include="Controllers\Query\" />
+    <Folder Include="Services\" />
+    <Folder Include="Services\ImageRecognition\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Controllers\ValuesController.cs" />

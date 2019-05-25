@@ -29,17 +29,9 @@ namespace ClimbingApp.ImageRecognition.Controllers
             }
 
             byte[] imageBinaries = Convert.FromBase64String(query.Image.Base64);
+            QueryResult result = await this.imageRecognition.QuerySimilarTargets(imageBinaries);
 
-            try
-            {
-                QueryResult result = await this.imageRecognition.QuerySimilarTargets(imageBinaries);
-
-                return Ok(result);
-            }
-            catch(TargetNotFoundException)
-            {
-                return NotFound();
-            }
+            return Ok(result);
         }
     }
 }
