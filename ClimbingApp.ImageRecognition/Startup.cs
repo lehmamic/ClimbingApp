@@ -1,4 +1,5 @@
-﻿using ClimbingApp.ImageRecognition.Services;
+﻿using AutoMapper;
+using ClimbingApp.ImageRecognition.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,23 @@ namespace ClimbingApp.ImageRecognition
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IImageRecognitionService, ImageRecognitionService>();
+
+            services.AddSingleton((serviceProvider) =>
+            {
+                var config = new MapperConfiguration(cfg => {
+                    cfg.AddMaps(typeof(Startup).Assembly);
+                });
+
+                config.AssertConfigurationIsValid();
+
+                return config;
+            });
+
+            services.AddSingleton<IMapper>((serviceProvider) =>
+            {
+                var config = serviceProvider.GetService<MapperConfiguration>();
+                return new Mapper(config);
+            });
 
             services.AddCors(options =>
             {

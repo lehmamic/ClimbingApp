@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ClimbingApp.ImageRecognition.Controllers
 {
-    public class Target
+    public class TargetRequest
     {
         [Required]
         public string Id { get; set; }

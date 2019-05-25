@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Google.Api.Gax;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
 using Google.Cloud.Vision.V1;
@@ -12,8 +15,11 @@ namespace ClimbingApp.ImageRecognition.Services
 {
     public class ImageRecognitionService : IImageRecognitionService
     {
-        public ImageRecognitionService()
+        private readonly IMapper mapper;
+
+        public ImageRecognitionService(IMapper mapper)
         {
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task CreateTargetSet(string targetSetId, string displayName)
@@ -33,6 +39,33 @@ namespace ClimbingApp.ImageRecognition.Services
                     ProductSetDisplayName = displayName,
                 };
                 await this.CreateProductSet(client, options);
+            }
+            finally
+            {
+                await channel.ShutdownAsync();
+            }
+        }
+
+        public async Task<IEnumerable<Target>> GetTargets(string targetSetId, int page, int pageSize)
+        {
+            GoogleCredential cred = this.CreateCredentials();
+            var channel = new Channel(ProductSearchClient.DefaultEndpoint.Host, ProductSearchClient.DefaultEndpoint.Port, cred.ToChannelCredentials());
+
+            try
+            {
+                var client = ProductSearchClient.Create(channel);
+
+                ListProductsInProductSetRequest request = new ListProductsInProductSetRequest
+                {
+                    ProductSetName = new ProductSetName("climbingapp-241211", "europe-west1", targetSetId),
+                    PageSize = pageSize,
+                };
+
+                PagedAsyncEnumerable<ListProductsInProductSetResponse, Product> response = client.ListProductsInProductSetAsync(request);
+                IEnumerable<Product> products = await response.AsAsyncEnumerable().ToArray();
+                IEnumerable<Target> targets = await Task.WhenAll(products.Select(p => this.LoadReferenceImagesAndMapToTarget(client, p, pageSize)));
+
+                return targets;
             }
             finally
             {
@@ -107,7 +140,7 @@ namespace ClimbingApp.ImageRecognition.Services
 
                 return await this.GetSimilarProductsFile(imageAnnotatorClient, options);
             }
-            catch(AnnotateImageException e)
+            catch(AnnotateImageException)
             {
                 return new QueryResult
                 {
@@ -174,7 +207,7 @@ namespace ClimbingApp.ImageRecognition.Services
             await client.AddProductToProductSetAsync(request);
         }
 
-        private async Task<ReferenceImage> CreateReferenceImage(ProductSearchClient client, CreateReferenceImageOptions opts)
+        private async Task<Google.Cloud.Vision.V1.ReferenceImage> CreateReferenceImage(ProductSearchClient client, CreateReferenceImageOptions opts)
         {
             var request = new CreateReferenceImageRequest
             {
@@ -182,7 +215,7 @@ namespace ClimbingApp.ImageRecognition.Services
                 ParentAsProductName = new ProductName(opts.ProjectID, opts.ComputeRegion, opts.ProductID),
                 ReferenceImageId = opts.ReferenceImageID,
                 // Create a reference image.
-                ReferenceImage = new ReferenceImage
+                ReferenceImage = new Google.Cloud.Vision.V1.ReferenceImage
                 {
                     Uri = opts.ReferenceImageURI
                 }
@@ -234,6 +267,27 @@ namespace ClimbingApp.ImageRecognition.Services
                     Score = r.Score,
                 }).ToArray()
             };
+        }
+
+        private async Task<Target> LoadReferenceImagesAndMapToTarget(ProductSearchClient client, Product product, int pageSize)
+        {
+            IEnumerable<Google.Cloud.Vision.V1.ReferenceImage> referenceImages = await this.GetReferenceImages(client, product, pageSize);
+
+            Target target = this.mapper.Map<Target>(product);
+            target.ReferenceImages = this.mapper.Map<IEnumerable<ReferenceImage>>(referenceImages);
+
+            return target;
+        }
+
+        private async Task<IEnumerable<Google.Cloud.Vision.V1.ReferenceImage>> GetReferenceImages(ProductSearchClient client, Product product, int pageSize)
+        {
+            ListReferenceImagesRequest referenceImageRequest = new ListReferenceImagesRequest
+            {
+                ParentAsProductName = product.ProductName,
+                PageSize = pageSize,
+            };
+
+            return await client.ListReferenceImagesAsync(referenceImageRequest).AsAsyncEnumerable().ToArray();
         }
     }
 }
