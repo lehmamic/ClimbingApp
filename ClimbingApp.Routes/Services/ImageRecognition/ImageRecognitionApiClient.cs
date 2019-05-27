@@ -51,12 +51,12 @@ namespace ClimbingApp.Routes.Services.ImageRecognition
                 throw new ArgumentNullException(nameof(base64Image));
             }
 
-            var query = new QueryRequest
+            var request = new QueryRequest
             {
                 Image = new Image { Base64 = base64Image },
             };
 
-            HttpResponseMessage response = await this.httpClient.PostAsJsonAsync("https://localhost:5001/api/v1/query", query);
+            HttpResponseMessage response = await this.httpClient.PostAsJsonAsync("https://localhost:5001/api/v1/query", request);
             if (response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadAsAsync<QueryResponse>();

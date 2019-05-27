@@ -1,4 +1,3 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,7 +11,7 @@ namespace ClimbingApp.ImageRecognition.Services
 
         Task<Target> GetTarget(string targetId);
 
-        Task CreateTarget(string targetId, string displayName, byte[] referenceImage);
+        Task<Target> CreateTarget(string targetId, string displayName, IReadOnlyDictionary<string, string> labels, byte[] referenceImageBinaries);
 
         Task DeleteTarget(string targetSetId, string targetId);
 

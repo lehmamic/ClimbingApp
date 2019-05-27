@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using AutoMapper;
 using ClimbingApp.ImageRecognition.Services;
@@ -31,7 +32,7 @@ namespace ClimbingApp.ImageRecognition.Controllers
             return Ok(response);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetTarget")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TargetResponse>> GetTarget(string id)
@@ -45,14 +46,16 @@ namespace ClimbingApp.ImageRecognition.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> CreateTarget([FromBody]TargetRequest target)
+        public async Task<ActionResult<TargetResponse>> CreateTarget([FromBody]CreateTargetRequest request)
         {
-            await this.imageRecognition.CreateTarget(
-                target.Id,
-                target.DisplayName,
-                Convert.FromBase64String(target.ReferenceImage.Base64));
+            Target target = await this.imageRecognition.CreateTarget(
+                request.DisplayName,
+                request.Description,
+                request.Labels ?? new ReadOnlyDictionary<string, string>(new Dictionary<string, string>()),
+                Convert.FromBase64String(request.ReferenceImage.Base64));
 
-            return NoContent();
+            TargetResponse response = this.mapper.Map<TargetResponse>(target);
+            return Created("GetTarget", response);
         }
 
         [HttpDelete("{id}")]

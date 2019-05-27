@@ -1,5 +1,4 @@
-﻿using System;
-namespace ClimbingApp.ImageRecognition.Services
+﻿namespace ClimbingApp.ImageRecognition.Services
 {
     public class QueryResultEntry
     {

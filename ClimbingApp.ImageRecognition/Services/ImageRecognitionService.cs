@@ -10,6 +10,7 @@ using Google.Cloud.Storage.V1;
 using Google.Cloud.Vision.V1;
 using Grpc.Auth;
 using Grpc.Core;
+using static Google.Cloud.Vision.V1.Product.Types;
 
 namespace ClimbingApp.ImageRecognition.Services
 {
@@ -90,7 +91,7 @@ namespace ClimbingApp.ImageRecognition.Services
             }
         }
 
-        public async Task CreateTarget(string targetId, string displayName, byte[] referenceImage)
+        public async Task<Target> CreateTarget(string targetId, string displayName, IReadOnlyDictionary<string, string> labels, byte[] referenceImageBinaries)
         {
             GoogleCredential cred = this.CreateCredentials();
             var channel = new Channel(ProductSearchClient.DefaultEndpoint.Host, ProductSearchClient.DefaultEndpoint.Port, cred.ToChannelCredentials());
@@ -104,9 +105,10 @@ namespace ClimbingApp.ImageRecognition.Services
                 {
                     ProjectID = "climbingapp-241211",
                     ComputeRegion = "europe-west1",
-                    ProductID = targetId,
+                    ProductID = Guid.NewGuid().ToString(),
                     ProductCategory = "apparel",
-                    DisplayName = "6aPlus-Schieber",
+                    DisplayName = displayName,
+                    ProductLabels = labels,
                 };
                 Product product = await this.CreateProduct(client, createProductOptions);
 
@@ -118,17 +120,23 @@ namespace ClimbingApp.ImageRecognition.Services
                     ProductSetId = "climbing-routes-1",
                 };
                 await this.AddProductToProductSet(client, addProductOptions);
-                await this.UploadFile(storage, "climbing-routes-images", targetId, referenceImage);
+                await this.UploadFile(storage, "climbing-routes-images", targetId, referenceImageBinaries);
 
+                string referenceImageId = Guid.NewGuid().ToString();
                 var createReferenceImageOptions = new CreateReferenceImageOptions
                 {
                     ProjectID = "climbingapp-241211",
                     ComputeRegion = "europe-west1",
                     ProductID = targetId,
-                    ReferenceImageID = targetId,
-                    ReferenceImageURI = $"gs://climbing-routes-images/{targetId}",
+                    ReferenceImageID = referenceImageId,
+                    ReferenceImageURI = $"gs://climbing-routes-images/{referenceImageId}",
                 };
-                await this.CreateReferenceImage(client, createReferenceImageOptions);
+                Google.Cloud.Vision.V1.ReferenceImage referenceImage = await this.CreateReferenceImage(client, createReferenceImageOptions);
+
+                Target target = this.mapper.Map<Target>(product);
+                target.ReferenceImages = new ReferenceImage[] { this.mapper.Map<ReferenceImage>(referenceImage) };
+
+                return target;
             }
             finally
             {
@@ -150,7 +158,7 @@ namespace ClimbingApp.ImageRecognition.Services
                 await Task.WhenAll(referenceImages.Select(async r =>
                 {
                     await this.DeleteReferenceImage(client, targetId, r.ReferenceImageName.ReferenceImageId);
-                    await this.DeleteFile(storage, "climbing-routes-images", targetId);
+                    await this.DeleteFile(storage, "climbing-routes-images", r.ReferenceImageName.ReferenceImageId);
                 }));
 
                 await this.RemoveProductFromProductSet(client, targetSetId, targetId);
@@ -232,6 +240,11 @@ namespace ClimbingApp.ImageRecognition.Services
                 ProductId = opts.ProductID
             };
 
+            foreach(var label in opts.ProductLabels)
+            {
+                request.Product.ProductLabels.Add(new KeyValue { Key = label.Key, Value = label.Value });
+            }
+
             // The response is the product with the `name` field populated.
             var product = await client.CreateProductAsync(request);
 
@@ -245,7 +258,7 @@ namespace ClimbingApp.ImageRecognition.Services
                 ProductName = new ProductName("climbingapp-241211", "europe-west1", productId),
             };
 
-            return client.GetProduct(request);
+            return await client.GetProductAsync(request);
         }
 
         private async Task DeleteProduct(ProductSearchClient client, string productId)

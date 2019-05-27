@@ -21,7 +21,7 @@ namespace ClimbingApp.ImageRecognition.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> QueryTargets([FromBody]Query query)
+        public async Task<ActionResult> QueryTargets([FromBody]QueryRequest query)
         {
             if (!this.ModelState.IsValid)
             {

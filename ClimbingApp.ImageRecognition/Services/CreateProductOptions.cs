@@ -1,4 +1,6 @@
-﻿namespace ClimbingApp.ImageRecognition.Services
+﻿using System.Collections.Generic;
+
+namespace ClimbingApp.ImageRecognition.Services
 {
     internal class CreateProductOptions
     {
@@ -7,5 +9,6 @@
         public string DisplayName { get; internal set; }
         public string ProductCategory { get; internal set; }
         public string ProductID { get; internal set; }
+        public IReadOnlyDictionary<string, string> ProductLabels { get; internal set; }
     }
 }
