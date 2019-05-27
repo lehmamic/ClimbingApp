@@ -73,6 +73,23 @@ namespace ClimbingApp.ImageRecognition.Services
             }
         }
 
+        public async Task<Target> GetTarget(string targetId)
+        {
+            GoogleCredential cred = this.CreateCredentials();
+            var channel = new Channel(ProductSearchClient.DefaultEndpoint.Host, ProductSearchClient.DefaultEndpoint.Port, cred.ToChannelCredentials());
+
+            try
+            {
+                var client = ProductSearchClient.Create(channel);
+                Product product = await this.GetProduct(client, targetId);
+                return await this.LoadReferenceImagesAndMapToTarget(client, product, 100);
+            }
+            finally
+            {
+                await channel.ShutdownAsync();
+            }
+        }
+
         public async Task CreateTarget(string targetId, string displayName, byte[] referenceImage)
         {
             GoogleCredential cred = this.CreateCredentials();
@@ -219,6 +236,16 @@ namespace ClimbingApp.ImageRecognition.Services
             var product = await client.CreateProductAsync(request);
 
             return product;
+        }
+
+        private async Task<Product> GetProduct(ProductSearchClient client, string productId)
+        {
+            var request = new GetProductRequest
+            {
+                ProductName = new ProductName("climbingapp-241211", "europe-west1", productId),
+            };
+
+            return client.GetProduct(request);
         }
 
         private async Task DeleteProduct(ProductSearchClient client, string productId)

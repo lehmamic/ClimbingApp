@@ -10,6 +10,8 @@ namespace ClimbingApp.ImageRecognition.Services
 
         Task<IEnumerable<Target>> GetTargets(string targetSetId, int page, int pageSize);
 
+        Task<Target> GetTarget(string targetId);
+
         Task CreateTarget(string targetId, string displayName, byte[] referenceImage);
 
         Task DeleteTarget(string targetSetId, string targetId);
