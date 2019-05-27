@@ -12,6 +12,8 @@ namespace ClimbingApp.ImageRecognition.Services
 
         Task CreateTarget(string targetId, string displayName, byte[] referenceImage);
 
+        Task DeleteTarget(string targetSetId, string targetId);
+
         Task<QueryResult> QuerySimilarTargets(byte[] image);
     }
 }

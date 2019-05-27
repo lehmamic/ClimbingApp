@@ -36,16 +36,18 @@ namespace ClimbingApp.ImageRecognition.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> CreateTarget([FromBody]TargetRequest target)
         {
-            if (!this.ModelState.IsValid)
-            {
-                return this.BadRequest(this.ModelState);
-            }
-
             await this.imageRecognition.CreateTarget(
                 target.Id,
                 target.DisplayName,
                 Convert.FromBase64String(target.ReferenceImage.Base64));
 
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteTarget(string id)
+        {
+            await this.imageRecognition.DeleteTarget("climbing-routes-1", id);
             return NoContent();
         }
     }

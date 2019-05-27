@@ -101,7 +101,7 @@ namespace ClimbingApp.ImageRecognition.Services
                     ProductSetId = "climbing-routes-1",
                 };
                 await this.AddProductToProductSet(client, addProductOptions);
-                await this.UploadFile(storage, "climbing-routes-images", targetId.ToString(), referenceImage);
+                await this.UploadFile(storage, "climbing-routes-images", targetId, referenceImage);
 
                 var createReferenceImageOptions = new CreateReferenceImageOptions
                 {
@@ -112,6 +112,33 @@ namespace ClimbingApp.ImageRecognition.Services
                     ReferenceImageURI = $"gs://climbing-routes-images/{targetId}",
                 };
                 await this.CreateReferenceImage(client, createReferenceImageOptions);
+            }
+            finally
+            {
+                await channel.ShutdownAsync();
+            }
+        }
+
+        public async Task DeleteTarget(string targetSetId, string targetId)
+        {
+            GoogleCredential cred = this.CreateCredentials();
+            var channel = new Channel(ProductSearchClient.DefaultEndpoint.Host, ProductSearchClient.DefaultEndpoint.Port, cred.ToChannelCredentials());
+
+            try
+            {
+                var client = ProductSearchClient.Create(channel);
+                var storage = await StorageClient.CreateAsync(cred);
+
+                IEnumerable<Google.Cloud.Vision.V1.ReferenceImage> referenceImages = await this.GetReferenceImages(client, targetId, 100);
+                await Task.WhenAll(referenceImages.Select(async r =>
+                {
+                    await this.DeleteReferenceImage(client, targetId, r.ReferenceImageName.ReferenceImageId);
+                    await this.DeleteFile(storage, "climbing-routes-images", targetId);
+                }));
+
+                await this.RemoveProductFromProductSet(client, targetSetId, targetId);
+                await this.DeleteProduct(client, targetId);
+
             }
             finally
             {
@@ -194,6 +221,16 @@ namespace ClimbingApp.ImageRecognition.Services
             return product;
         }
 
+        private async Task DeleteProduct(ProductSearchClient client, string productId)
+        {
+            var request = new DeleteProductRequest
+            {
+                ProductName = new ProductName("climbingapp-241211", "europe-west1", productId),
+            };
+
+            await client.DeleteProductAsync(request);
+        }
+
         private async Task AddProductToProductSet(ProductSearchClient client, AddProductToProductSetOptions opts)
         {
             var request = new AddProductToProductSetRequest
@@ -205,6 +242,17 @@ namespace ClimbingApp.ImageRecognition.Services
             };
 
             await client.AddProductToProductSetAsync(request);
+        }
+
+        private async Task RemoveProductFromProductSet(ProductSearchClient client, string productSetId, string productId)
+        {
+            var request = new RemoveProductFromProductSetRequest
+            {
+                ProductSetName = new ProductSetName("climbingapp-241211", "europe-west1", productSetId),
+                ProductAsProductName = new ProductName("climbingapp-241211", "europe-west1", productId),
+            };
+
+            await client.RemoveProductFromProductSetAsync(request);
         }
 
         private async Task<Google.Cloud.Vision.V1.ReferenceImage> CreateReferenceImage(ProductSearchClient client, CreateReferenceImageOptions opts)
@@ -226,12 +274,27 @@ namespace ClimbingApp.ImageRecognition.Services
             return referenceImage;
         }
 
+        private async Task DeleteReferenceImage(ProductSearchClient client, string productId, string referenceImageId)
+        {
+            var request = new DeleteReferenceImageRequest
+            {
+                ReferenceImageName = new ReferenceImageName("climbingapp-241211", "europe-west1", productId, referenceImageId)
+            };
+
+            await client.DeleteReferenceImageAsync(request);
+        }
+
         private async Task UploadFile(StorageClient storage, string bucketName, string objectName, byte[] image)
         {
             using (var stream = new MemoryStream(image))
             {
                 await storage.UploadObjectAsync(bucketName, objectName, null, stream);
             }
+        }
+
+        private async Task DeleteFile(StorageClient storage, string bucketName, string objectName)
+        {
+            await storage.DeleteObjectAsync(bucketName, objectName);
         }
 
         private GoogleCredential CreateCredentials()
@@ -284,6 +347,17 @@ namespace ClimbingApp.ImageRecognition.Services
             ListReferenceImagesRequest referenceImageRequest = new ListReferenceImagesRequest
             {
                 ParentAsProductName = product.ProductName,
+                PageSize = pageSize,
+            };
+
+            return await client.ListReferenceImagesAsync(referenceImageRequest).AsAsyncEnumerable().ToArray();
+        }
+
+        private async Task<IEnumerable<Google.Cloud.Vision.V1.ReferenceImage>> GetReferenceImages(ProductSearchClient client, string productId, int pageSize)
+        {
+            ListReferenceImagesRequest referenceImageRequest = new ListReferenceImagesRequest
+            {
+                ParentAsProductName = new ProductName("climbingapp-241211", "europe-west1", productId),
                 PageSize = pageSize,
             };
 
