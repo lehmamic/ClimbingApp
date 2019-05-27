@@ -9,6 +9,6 @@ namespace ClimbingApp.ImageRecognition.Services
         public string DisplayName { get; internal set; }
         public string ProductCategory { get; internal set; }
         public string ProductID { get; internal set; }
-        public IReadOnlyDictionary<string, string> ProductLabels { get; internal set; }
+        public IReadOnlyDictionary<string, string> ProductLabels { get; set; }
     }
 }

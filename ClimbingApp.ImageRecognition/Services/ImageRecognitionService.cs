@@ -235,7 +235,7 @@ namespace ClimbingApp.ImageRecognition.Services
                 Product = new Product
                 {
                     DisplayName = opts.DisplayName,
-                    ProductCategory = opts.ProductCategory
+                    ProductCategory = opts.ProductCategory,
                 },
                 ProductId = opts.ProductID
             };
