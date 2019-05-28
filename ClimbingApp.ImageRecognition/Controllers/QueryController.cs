@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AutoMapper;
 using ClimbingApp.ImageRecognition.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace ClimbingApp.ImageRecognition.Controllers
     public class QueryController : ControllerBase
     {
         private readonly IImageRecognitionService imageRecognition;
+        private readonly IMapper mapper;
 
-        public QueryController(IImageRecognitionService imageRecognition)
+        public QueryController(IImageRecognitionService imageRecognition, IMapper mapper)
         {
             this.imageRecognition = imageRecognition ?? throw new ArgumentNullException(nameof(imageRecognition));
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [HttpPost]
@@ -29,9 +32,10 @@ namespace ClimbingApp.ImageRecognition.Controllers
             }
 
             byte[] imageBinaries = Convert.FromBase64String(query.Image.Base64);
-            QueryResult result = await this.imageRecognition.QuerySimilarTargets(imageBinaries);
+            TargetSearchResults results = await this.imageRecognition.QuerySimilarTargets(imageBinaries);
+            QueryResponse response = this.mapper.Map<QueryResponse>(results);
 
-            return Ok(result);
+            return Ok(response);
         }
     }
 }

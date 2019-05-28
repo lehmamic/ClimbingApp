@@ -174,7 +174,7 @@ namespace ClimbingApp.ImageRecognition.Services
             }
         }
 
-        public async Task<QueryResult> QuerySimilarTargets(byte[] image)
+        public async Task<TargetSearchResults> QuerySimilarTargets(byte[] image)
         {
             GoogleCredential cred = this.CreateCredentials();
             var channel = new Channel(ProductSearchClient.DefaultEndpoint.Host, ProductSearchClient.DefaultEndpoint.Port, cred.ToChannelCredentials());
@@ -195,11 +195,11 @@ namespace ClimbingApp.ImageRecognition.Services
 
                 return await this.GetSimilarProductsFile(imageAnnotatorClient, options);
             }
-            catch(AnnotateImageException)
+            catch(AnnotateImageException e)
             {
-                return new QueryResult
+                return new TargetSearchResults
                 {
-                    Results = new QueryResultEntry[0],
+                    Results = new TargetSearchResultEntry[0],
                 };
             }
             finally
@@ -346,10 +346,10 @@ namespace ClimbingApp.ImageRecognition.Services
             return GoogleCredential.FromFile("/Users/leh/Data/git/misc/ClimbingApp/ClimbingApp-8385749116e7.json");
         }
 
-        private async Task<QueryResult> GetSimilarProductsFile(ImageAnnotatorClient imageAnnotatorClient, GetSimilarProductsOptions opts)
+        private async Task<TargetSearchResults> GetSimilarProductsFile(ImageAnnotatorClient imageAnnotatorClient, GetSimilarProductsOptions opts)
         {
             // Create annotate image request along with product search feature.
-            Google.Cloud.Vision.V1.Image image = Google.Cloud.Vision.V1.Image.FromBytes(opts.ImageBinaries);
+            Image image = Image.FromBytes(opts.ImageBinaries);
 
             // Product Search specific parameters
             var productSearchParams = new ProductSearchParams
@@ -362,18 +362,8 @@ namespace ClimbingApp.ImageRecognition.Services
             };
 
             // Search products similar to the image.
-            var results = await imageAnnotatorClient.DetectSimilarProductsAsync(image, productSearchParams);
-
-            return new QueryResult
-            {
-                Results = results.Results.Select(r => new QueryResultEntry
-                {
-                    TargetId = r.Product.ProductName.ProductId,
-                    DisplayName = r.Product.DisplayName,
-                    Description = r.Product.Description,
-                    Score = r.Score,
-                }).ToArray()
-            };
+            ProductSearchResults results = await imageAnnotatorClient.DetectSimilarProductsAsync(image, productSearchParams);
+            return this.mapper.Map<TargetSearchResults>(results);
         }
 
         private async Task<Target> LoadReferenceImagesAndMapToTarget(ProductSearchClient client, Product product, int pageSize)

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace ClimbingApp.ImageRecognition.Services
 {
-    public class QueryResult
+    public class TargetSearchResults
     {
-        public IEnumerable<QueryResultEntry> Results { get; set; }
+        public IEnumerable<TargetSearchResultEntry> Results { get; set; }
     }
 }
