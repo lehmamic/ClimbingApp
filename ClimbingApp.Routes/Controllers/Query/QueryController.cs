@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using ClimbingApp.Routes.Controllers.ClimbingRoutes;
 using ClimbingApp.Routes.Entities;
 using ClimbingApp.Routes.Services.ImageRecognition;
 using Microsoft.AspNetCore.Mvc;
@@ -33,14 +34,15 @@ namespace ClimbingApp.Routes.Controllers.Query
             QueryResult match = response.Results.OrderByDescending(r => r.Score).FirstOrDefault(r => r.Score > 0.85);
             if (match != null)
             {
+                string climbingRouteId = match.Target.Labels[ClimbingRoutesConstants.CLIMBING_ROUTE_ID_LABEL];
                 ClimbingSite site = await this.documentSession.Query<ClimbingSite>()
-                    .FirstOrDefaultAsync(s => s.Routes.Any(r => r.Id == match.TargetId));
+                    .FirstOrDefaultAsync(s => s.Routes.Any(r => r.Id == climbingRouteId));
 
                 if (site != null)
                 {
                     result.ClimbingSite = this.mapper.Map<ClimbingSiteMatch>(site);
 
-                    ClimbingRoute route = site.Routes.Single(r => r.Id == match.TargetId);
+                    ClimbingRoute route = site.Routes.Single(r => r.Id == climbingRouteId);
                     result.ClimbingSite.Route = this.mapper.Map<ClimbingRouteMatch>(route);
 
                     return Ok(result);

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using ClimbingApp.Routes.Entities;
@@ -20,7 +19,7 @@ namespace ClimbingApp.Routes.Controllers.ClimbingSites
 
         public SitesController(IAsyncDocumentSession documentSession, IMapper mapper)
         {
-            this.documentSession = documentSession ?? throw new System.ArgumentNullException(nameof(documentSession));
+            this.documentSession = documentSession ?? throw new ArgumentNullException(nameof(documentSession));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -58,15 +57,9 @@ namespace ClimbingApp.Routes.Controllers.ClimbingSites
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<ClimbingSiteResponse>> Post([FromBody] CreateClimbingSiteRequest value)
+        public async Task<ActionResult<ClimbingSiteResponse>> Post([FromBody] CreateClimbingSiteRequest request)
         {
-            if (!this.ModelState.IsValid)
-            {
-                return this.BadRequest(this.ModelState);
-            }
-
-
-            ClimbingSite site = this.mapper.Map<ClimbingSite>(value);
+            ClimbingSite site = this.mapper.Map<ClimbingSite>(request);
             await this.documentSession.StoreAsync(site);
             await this.documentSession.SaveChangesAsync();
 
@@ -78,20 +71,15 @@ namespace ClimbingApp.Routes.Controllers.ClimbingSites
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Put([FromRoute]string id, [FromBody] UpdateClimbingSiteRequest value)
+        public async Task<ActionResult> Put([FromRoute]string id, [FromBody] UpdateClimbingSiteRequest request)
         {
-            if (!this.ModelState.IsValid)
-            {
-                return this.BadRequest(this.ModelState);
-            }
-
             ClimbingSite site = await this.documentSession.LoadAsync<ClimbingSite>(id);
             if (site == null)
             {
                 return NotFound();
             }
 
-            this.mapper.Map(value, site);
+            this.mapper.Map(request, site);
             await this.documentSession.SaveChangesAsync();
 
             return NoContent();
@@ -109,7 +97,6 @@ namespace ClimbingApp.Routes.Controllers.ClimbingSites
 
             this.documentSession.Delete(site);
             await this.documentSession.SaveChangesAsync();
-  
 
             return NoContent();
         }
