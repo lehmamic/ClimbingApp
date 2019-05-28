@@ -11,7 +11,7 @@ namespace ClimbingApp.ImageRecognition.Services
 
         Task<Target> GetTarget(string targetId);
 
-        Task<Target> CreateTarget(string targetId, string displayName, IReadOnlyDictionary<string, string> labels, byte[] referenceImageBinaries);
+        Task<Target> CreateTarget(string displayName, string description, IReadOnlyDictionary<string, string> labels, byte[] referenceImageBinaries);
 
         Task DeleteTarget(string targetSetId, string targetId);
 

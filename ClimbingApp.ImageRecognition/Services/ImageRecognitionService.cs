@@ -91,7 +91,7 @@ namespace ClimbingApp.ImageRecognition.Services
             }
         }
 
-        public async Task<Target> CreateTarget(string targetId, string displayName, IReadOnlyDictionary<string, string> labels, byte[] referenceImageBinaries)
+        public async Task<Target> CreateTarget(string displayName, string description, IReadOnlyDictionary<string, string> labels, byte[] referenceImageBinaries)
         {
             GoogleCredential cred = this.CreateCredentials();
             var channel = new Channel(ProductSearchClient.DefaultEndpoint.Host, ProductSearchClient.DefaultEndpoint.Port, cred.ToChannelCredentials());
@@ -101,13 +101,15 @@ namespace ClimbingApp.ImageRecognition.Services
                 var client = ProductSearchClient.Create(channel);
                 var storage = await StorageClient.CreateAsync(cred);
 
+                string productId = Guid.NewGuid().ToString();
                 var createProductOptions = new CreateProductOptions
                 {
                     ProjectID = "climbingapp-241211",
                     ComputeRegion = "europe-west1",
-                    ProductID = Guid.NewGuid().ToString(),
+                    ProductID = productId,
                     ProductCategory = "apparel",
                     DisplayName = displayName,
+                    Description = description,
                     ProductLabels = labels,
                 };
                 Product product = await this.CreateProduct(client, createProductOptions);
@@ -116,18 +118,19 @@ namespace ClimbingApp.ImageRecognition.Services
                 {
                     ProjectID = "climbingapp-241211",
                     ComputeRegion = "europe-west1",
-                    ProductID = targetId,
+                    ProductID = product.ProductName.ProductId,
                     ProductSetId = "climbing-routes-1",
                 };
                 await this.AddProductToProductSet(client, addProductOptions);
-                await this.UploadFile(storage, "climbing-routes-images", targetId, referenceImageBinaries);
 
                 string referenceImageId = Guid.NewGuid().ToString();
+                await this.UploadFile(storage, "climbing-routes-images", referenceImageId, referenceImageBinaries);
+
                 var createReferenceImageOptions = new CreateReferenceImageOptions
                 {
                     ProjectID = "climbingapp-241211",
                     ComputeRegion = "europe-west1",
-                    ProductID = targetId,
+                    ProductID = product.ProductName.ProductId,
                     ReferenceImageID = referenceImageId,
                     ReferenceImageURI = $"gs://climbing-routes-images/{referenceImageId}",
                 };
@@ -236,6 +239,7 @@ namespace ClimbingApp.ImageRecognition.Services
                 {
                     DisplayName = opts.DisplayName,
                     ProductCategory = opts.ProductCategory,
+                    Description = opts.Description ?? string.Empty,
                 },
                 ProductId = opts.ProductID
             };
@@ -339,7 +343,7 @@ namespace ClimbingApp.ImageRecognition.Services
 
         private GoogleCredential CreateCredentials()
         {
-            return GoogleCredential.FromFile("/Users/lehmamic/Data/Misc/ClimbingApp/ClimbingApp/ClimbingApp-8385749116e7.json");
+            return GoogleCredential.FromFile("/Users/leh/Data/git/misc/ClimbingApp/ClimbingApp-8385749116e7.json");
         }
 
         private async Task<QueryResult> GetSimilarProductsFile(ImageAnnotatorClient imageAnnotatorClient, GetSimilarProductsOptions opts)

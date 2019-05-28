@@ -10,6 +10,8 @@ namespace ClimbingApp.ImageRecognition.Services
 
         public string Description { get; set; }
 
+        public IReadOnlyDictionary<string, string> Labels { get; set; }
+
         public IEnumerable<ReferenceImage> ReferenceImages { get; set; }
     }
 }
