@@ -10,6 +10,7 @@ using Google.Cloud.Storage.V1;
 using Google.Cloud.Vision.V1;
 using Grpc.Auth;
 using Grpc.Core;
+using Microsoft.Extensions.Logging;
 using static Google.Cloud.Vision.V1.Product.Types;
 
 namespace ClimbingApp.ImageRecognition.Services
@@ -17,10 +18,12 @@ namespace ClimbingApp.ImageRecognition.Services
     public class ImageRecognitionService : IImageRecognitionService
     {
         private readonly IMapper mapper;
+        private readonly ILogger logger;
 
-        public ImageRecognitionService(IMapper mapper)
+        public ImageRecognitionService(IMapper mapper, ILogger<ImageRecognitionService> logger)
         {
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task CreateTargetSet(string targetSetId, string displayName)
@@ -197,6 +200,7 @@ namespace ClimbingApp.ImageRecognition.Services
             }
             catch(AnnotateImageException e)
             {
+                this.logger.LogError(e, "The google cloud image recognition service threw an error.");
                 return new TargetSearchResults
                 {
                     Results = new TargetSearchResultEntry[0],
