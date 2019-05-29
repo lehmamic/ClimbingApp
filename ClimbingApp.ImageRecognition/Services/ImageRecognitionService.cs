@@ -347,7 +347,7 @@ namespace ClimbingApp.ImageRecognition.Services
 
         private GoogleCredential CreateCredentials()
         {
-            return GoogleCredential.FromFile("/Users/leh/Data/git/misc/ClimbingApp/ClimbingApp-8385749116e7.json");
+            return GoogleCredential.FromFile("../ClimbingApp-8385749116e7.json");
         }
 
         private async Task<TargetSearchResults> GetSimilarProductsFile(ImageAnnotatorClient imageAnnotatorClient, GetSimilarProductsOptions opts)

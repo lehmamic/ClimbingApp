@@ -35,7 +35,7 @@ namespace ClimbingApp.Routes.Services.ImageRecognition
                 },
             };
 
-            HttpResponseMessage response = await this.httpClient.PostAsJsonAsync("https://localhost:5001/api/v1/targets", request);
+            HttpResponseMessage response = await this.httpClient.PostAsJsonAsync("http://localhost:5001/api/v1/targets", request);
             if (response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadAsAsync<TargetResponse>();

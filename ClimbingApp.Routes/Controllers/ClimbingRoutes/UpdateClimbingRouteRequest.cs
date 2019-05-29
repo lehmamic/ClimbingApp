@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace ClimbingApp.Routes.Controllers.ClimbingRoutes
 {
@@ -14,6 +16,7 @@ namespace ClimbingApp.Routes.Controllers.ClimbingRoutes
         public string Grade { get; set; }
 
         [Required]
+        [JsonConverter(typeof(StringEnumConverter))]
         public ClimbingRouteType Type { get; set; }
 
         public Image Image { get; set; }
