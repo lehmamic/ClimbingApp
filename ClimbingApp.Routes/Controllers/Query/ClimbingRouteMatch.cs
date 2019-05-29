@@ -1,4 +1,6 @@
 ﻿using ClimbingApp.Routes.Controllers.ClimbingRoutes;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace ClimbingApp.Routes.Controllers.Query
 {
@@ -12,6 +14,7 @@ namespace ClimbingApp.Routes.Controllers.Query
 
         public string Grade { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public ClimbingRouteType Type { get; set; }
     }
 }
