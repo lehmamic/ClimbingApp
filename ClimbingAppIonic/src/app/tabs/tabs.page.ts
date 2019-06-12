@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { State } from '../reducers';
 import { Store } from '@ngrx/store';
-import { TakePhotoAction } from '../app.actions';
+import { TakePhotoAction } from '../query';
 
 @Component({
   selector: 'app-tabs',

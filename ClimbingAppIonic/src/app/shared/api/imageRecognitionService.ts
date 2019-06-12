@@ -26,6 +26,6 @@ export class ImageRecognitionService {
     constructor(private http: HttpClient) { }
 
     public query(request: ImageRecognitionQueryRequest): Observable<ImageRecognitionQueryResponse> {
-        return this.http.post<ImageRecognitionQueryResponse>('https://localhost:5001/api/v1/query', request);
+        return this.http.post<ImageRecognitionQueryResponse>('http://localhost:5001/api/v1/query', request);
     }
 }

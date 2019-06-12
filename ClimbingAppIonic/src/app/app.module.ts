@@ -20,6 +20,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { AppEffects } from './app.effects'; // Angular CLI environemnt
 import { NativeModule } from './shared/native';
 import { ApiModule } from './shared/api';
+import { QueryModule } from './query/query.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -39,6 +40,7 @@ import { ApiModule } from './shared/api';
     EffectsModule.forRoot([AppEffects]),
     NativeModule,
     ApiModule,
+    QueryModule,
   ],
   providers: [
     StatusBar,
