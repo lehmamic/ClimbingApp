@@ -26,6 +26,25 @@ namespace ClimbingApp.ImageRecognition.Services
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        public async Task GetTargetSets()
+        {
+            GoogleCredential cred = this.CreateCredentials();
+            var channel = new Channel(ProductSearchClient.DefaultEndpoint.Host, ProductSearchClient.DefaultEndpoint.Port, cred.ToChannelCredentials());
+
+            try
+            {
+                var client = ProductSearchClient.Create(channel);
+                // var productSet = await this.GetProductSets(client, 100);
+
+               // productSet.
+ 
+            }
+            finally
+            {
+                await channel.ShutdownAsync();
+            }
+        }
+
         public async Task CreateTargetSet(string targetSetId, string displayName)
         {
             GoogleCredential cred = this.CreateCredentials();
@@ -42,7 +61,7 @@ namespace ClimbingApp.ImageRecognition.Services
                     ProductSetId = targetSetId,
                     ProductSetDisplayName = displayName,
                 };
-                await this.CreateProductSet(client, options);
+                var productSet = await this.CreateProductSet(client, options);
             }
             finally
             {
@@ -231,6 +250,18 @@ namespace ClimbingApp.ImageRecognition.Services
 
             return response;
         }
+
+
+        //private async Task<ProductSet> GetProductSets(ProductSearchClient client, int pageSize)
+        //{
+        //    var request = new ListProductSetsRequest
+        //    {
+        //        ParentAsLocationName = new LocationName("climbingapp-241211", "europe-west1"),
+        //        PageSize = pageSize,
+        //    };
+
+        //    return await client.ListProductSets(request);
+        //}
 
         private async Task<Product> CreateProduct(ProductSearchClient client, CreateProductOptions opts)
         {

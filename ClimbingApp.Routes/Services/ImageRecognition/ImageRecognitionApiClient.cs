@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace ClimbingApp.Routes.Services.ImageRecognition
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
-        public async Task<TargetResponse> CreateTarget(string name, string description, string base64Image)
+        public async Task<TargetResponse> CreateTarget(string name, string description, IReadOnlyDictionary<string, string> labels, string base64Image)
         {
             if (name == null)
             {
@@ -29,6 +30,7 @@ namespace ClimbingApp.Routes.Services.ImageRecognition
             {
                 DisplayName = name,
                 Description = description,
+                Labels = labels,
                 ReferenceImage = new Image
                 {
                     Base64 = base64Image,

@@ -80,7 +80,11 @@ namespace ClimbingApp.Routes.Controllers.ClimbingRoutes
             await this.documentSession.SaveChangesAsync();
 
             // TODO create the task with a queue or async task handler
-            await this.imageRecognition.CreateTarget(request.Name, request.Description, request.Image.Base64);
+            var labels = new Dictionary<string, string>
+            {
+                { ClimbingRoutesConstants.CLIMBING_ROUTE_ID_LABEL, route.Id },
+            };
+            await this.imageRecognition.CreateTarget(request.Name, request.Description, labels, request.Image.Base64);
 
             var response = this.mapper.Map<ClimbingRouteResponse>(route);
             return CreatedAtRoute("GetClimbingRoute", new { siteId, id = response.Id }, response);

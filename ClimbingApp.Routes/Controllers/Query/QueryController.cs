@@ -34,21 +34,23 @@ namespace ClimbingApp.Routes.Controllers.Query
             QueryResult match = response.Results.OrderByDescending(r => r.Score).FirstOrDefault(r => r.Score > 0.85);
             if (match != null)
             {
-                string climbingRouteId = match.Target.Labels[ClimbingRoutesConstants.CLIMBING_ROUTE_ID_LABEL];
+                match.Target.Labels.TryGetValue(ClimbingRoutesConstants.CLIMBING_ROUTE_ID_LABEL, out string climbingRouteId);
                 ClimbingSite site = await this.documentSession.Query<ClimbingSite>()
                     .FirstOrDefaultAsync(s => s.Routes.Any(r => r.Id == climbingRouteId));
 
                 if (site != null)
                 {
-                    result.ClimbingSite = this.mapper.Map<ClimbingSiteMatch>(site);
-
                     ClimbingRoute route = site.Routes.Single(r => r.Id == climbingRouteId);
+
+                    result.Result = QueryResultType.Match;
+                    result.ClimbingSite = this.mapper.Map<ClimbingSiteMatch>(site);
                     result.ClimbingSite.Route = this.mapper.Map<ClimbingRouteMatch>(route);
 
                     return Ok(result);
                 }
             }
 
+            result.Result = QueryResultType.NoMatch;
             result.ClimbingSite = new ClimbingSiteMatch()
             {
                 Route = new ClimbingRouteMatch(),
