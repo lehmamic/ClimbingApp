@@ -13,7 +13,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
-import { reducers, metaReducers } from './reducers';
+import { reducers, metaReducers } from './app.reducer';
 
 import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
@@ -36,7 +36,9 @@ import { QueryModule } from './query/query.module';
       maxAge: 25, // Retains last 25 states
       logOnly: environment.production, // Restrict extension to log-only mode
     }),
-    StoreRouterConnectingModule.forRoot(),
+    StoreRouterConnectingModule.forRoot({
+      stateKey: 'router',
+    }),
     EffectsModule.forRoot([AppEffects]),
     NativeModule,
     ApiModule,

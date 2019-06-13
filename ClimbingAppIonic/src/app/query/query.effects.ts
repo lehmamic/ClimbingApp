@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { CameraPhoto, CameraResultType, CameraSource } from '@capacitor/core';
-import { ImageRecognitionService, ImageRecognitionQueryRequest } from '../shared/api';
-import { TakePhotoAction, QueryImageRecognitionAction, QueryActionTypes } from './query.actions';
-import { switchMap, flatMap, catchError, map } from 'rxjs/operators';
-import { empty } from 'rxjs';
+import { ImageRecognitionQueryRequest, ClimbingRouteService } from '../shared/api';
+import { TakePhotoAction, QueryImageRecognitionAction, QueryActionTypes, SetPhotoAction, OpenAnalyzingModalAction } from './query.actions';
+import { switchMap, flatMap, catchError, map, tap } from 'rxjs/operators';
+import { empty, defer } from 'rxjs';
 import { Camera } from '../shared/native/camera';
+import { ModalController } from '@ionic/angular';
+import { AnalyzingPage } from './analyzing';
 
 @Injectable()
 export class QueryEffects {
@@ -19,16 +21,27 @@ export class QueryEffects {
       }).pipe(
         flatMap(photo => {
           console.log(JSON.stringify(photo));
-          return [new QueryImageRecognitionAction(photo)];
+          return [
+            new SetPhotoAction(photo),
+            new OpenAnalyzingModalAction(),
+            // new QueryImageRecognitionAction(photo),
+          ];
         }),
         catchError(() => empty()),
     )),
   );
 
+  @Effect() openAnalyzingModal$ = this.actions$.pipe(
+    ofType<OpenAnalyzingModalAction>(QueryActionTypes.OpenAnalyzingModal),
+    flatMap(() => defer(() => this.modalController.create({ component: AnalyzingPage }))),
+    tap(modal => modal.present()),
+    flatMap(() => []),
+  );
+
   @Effect() queryImageRecognition$ = this.actions$.pipe(
     ofType<QueryImageRecognitionAction>(QueryActionTypes.QueryImageRecognition),
     map(a => mapPhotoToQuery(a.payload)),
-    switchMap((dto) => this.imageRecognitionService.query(dto).pipe(
+    switchMap((dto) => this.climbingRouteService.query(dto).pipe(
       flatMap(result => {
         console.log(JSON.stringify(result));
         return [];
@@ -43,7 +56,8 @@ export class QueryEffects {
   constructor(
     private actions$: Actions,
     private camera: Camera,
-    private imageRecognitionService: ImageRecognitionService) {}
+    private climbingRouteService: ClimbingRouteService,
+    private modalController: ModalController) {}
 }
 
 function mapPhotoToQuery(photo: CameraPhoto): ImageRecognitionQueryRequest {

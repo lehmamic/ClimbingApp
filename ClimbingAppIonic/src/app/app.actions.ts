@@ -1,21 +1,18 @@
-// import { Action } from '@ngrx/store';
-// import { CameraPhoto } from '@capacitor/core';
+import { Action } from '@ngrx/store';
 
-// export enum AppActionTypes {
-//   TakePhoto = '[App] Take Photo',
-//   QueryImageRecognition = '[App] Query Image Recognition',
-// }
+export enum AppActionTypes {
+  IncreaseRequestSemaphore = '[App] Increase Request Semaphore',
+  DecreaseRequestSemaphore = '[App] Decrease Request Semaphore',
+}
 
-// export class TakePhotoAction implements Action {
-//   readonly type = AppActionTypes.TakePhoto;
-// }
+export class IncreaseRequestSemaphoreAction implements Action {
+  readonly type = AppActionTypes.IncreaseRequestSemaphore;
+}
 
-// export class QueryImageRecognitionAction implements Action {
-//   readonly type = AppActionTypes.QueryImageRecognition;
+export class DecreaseRequestSemaphoreAction implements Action {
+  readonly type = AppActionTypes.DecreaseRequestSemaphore;
+}
 
-//   constructor(public payload: CameraPhoto) { }
-// }
-
-// export type AppActions =
-//   TakePhotoAction |
-//   QueryImageRecognitionAction;
+export type AppActions =
+  IncreaseRequestSemaphoreAction |
+  DecreaseRequestSemaphoreAction;

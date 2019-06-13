@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { State } from '../reducers';
+import { State } from '../app.reducer';
 import { Store } from '@ngrx/store';
 import { TakePhotoAction } from '../query';
 

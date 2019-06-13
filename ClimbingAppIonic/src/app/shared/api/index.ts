@@ -1,2 +1,2 @@
 export * from './api.module';
-export * from './imageRecognitionService';
+export * from './climbingRouteService';

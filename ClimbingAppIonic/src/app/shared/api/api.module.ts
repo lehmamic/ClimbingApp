@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ImageRecognitionService } from './imageRecognitionService';
+import { ClimbingRouteService } from './climbingRouteService';
 
 @NgModule({
   declarations: [],
@@ -10,7 +10,7 @@ import { ImageRecognitionService } from './imageRecognitionService';
     HttpClientModule,
   ],
   providers: [
-    ImageRecognitionService,
+    ClimbingRouteService
   ]
 })
 export class ApiModule { }
