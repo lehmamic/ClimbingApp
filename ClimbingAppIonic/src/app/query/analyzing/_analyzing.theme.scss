@@ -1,0 +1,14 @@
+@import '~@angular/material/theming';
+
+@mixin analyzing-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+  $config: mat-typography-config();
+
+  .footer {
+    background-color: mat-color($primary, 500);
+  }
+}

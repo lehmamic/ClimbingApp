@@ -21,6 +21,8 @@ import { AppEffects } from './app.effects'; // Angular CLI environemnt
 import { NativeModule } from './shared/native';
 import { ApiModule } from './shared/api';
 import { QueryModule } from './query/query.module';
+import { ClimbingRouteModule } from './climbing-route/climbing-route.module';
+import { RouterEffects } from './router.effects';
 
 @NgModule({
   declarations: [AppComponent],
@@ -39,10 +41,14 @@ import { QueryModule } from './query/query.module';
     StoreRouterConnectingModule.forRoot({
       stateKey: 'router',
     }),
-    EffectsModule.forRoot([AppEffects]),
+    EffectsModule.forRoot([
+      AppEffects,
+      RouterEffects
+    ]),
     NativeModule,
     ApiModule,
     QueryModule,
+    ClimbingRouteModule,
   ],
   providers: [
     StatusBar,

@@ -1,5 +1,14 @@
-<ion-content>
-  <div>
-    <img [src]="imageUrl$ | async">
+<div class="preview">
+  <img [src]="imageUrl$ | async">
+</div>
+<div class="content">
+  <div *ngIf="!(requestPending$ | async)">Preview</div>
+  <div *ngIf="requestPending$ | async">
+    <mat-progress-spinner mode="indeterminate" [diameter]="50"></mat-progress-spinner>
+    Analyzing
   </div>
-</ion-content>
+</div>
+<div class="footer">
+  <button mat-flat-button color="primary" (click)="cancelQuery()">Cancel</button>
+  <button mat-flat-button color="primary" [disabled]="requestPending$ | async" (click)="queryClimbingRoute()">Use</button>
+</div>
