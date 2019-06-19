@@ -43,17 +43,17 @@ namespace ClimbingApp.Routes.Controllers.Query
                     ClimbingRoute route = site.Routes.Single(r => r.Id == climbingRouteId);
 
                     result.Result = QueryResultType.Match;
-                    result.ClimbingSite = this.mapper.Map<ClimbingSiteMatch>(site);
-                    result.ClimbingSite.Route = this.mapper.Map<ClimbingRouteMatch>(route);
+                    result.ClimbingRoute = this.mapper.Map<ClimbingRouteMatch>(route);
+                    result.ClimbingRoute.Site = this.mapper.Map<ClimbingSiteMatch>(site);
 
                     return Ok(result);
                 }
             }
 
             result.Result = QueryResultType.NoMatch;
-            result.ClimbingSite = new ClimbingSiteMatch()
+            result.ClimbingRoute = new ClimbingRouteMatch()
             {
-                Route = new ClimbingRouteMatch(),
+                Site = new ClimbingSiteMatch(),
             };
 
             return Ok(result);

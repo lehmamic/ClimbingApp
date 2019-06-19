@@ -20,7 +20,7 @@ export type ClimbingRouteType =
 
 export interface ImageRecognitionQueryResponse {
     result: ImageRecognitionQueryResult;
-    climbingSite: ClimbingSiteMatch;
+    climbingRoute: ClimbingRouteMatch;
 }
 
 export interface ClimbingRouteMatch {
@@ -29,13 +29,13 @@ export interface ClimbingRouteMatch {
     description: string;
     grade: string;
     type: ClimbingRouteType;
+    site: ClimbingSiteMatch;
 }
 
 export interface ClimbingSiteMatch {
     id: string;
     name: string;
     description: string;
-    route: ClimbingRouteMatch;
 }
 
 @Injectable()

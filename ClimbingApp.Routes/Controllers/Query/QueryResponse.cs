@@ -8,6 +8,6 @@ namespace ClimbingApp.Routes.Controllers.Query
         [JsonConverter(typeof(StringEnumConverter))]
         public QueryResultType Result { get; set; }
 
-        public ClimbingSiteMatch ClimbingSite { get; set; }
+        public ClimbingRouteMatch ClimbingRoute { get; set; }
     }
 }

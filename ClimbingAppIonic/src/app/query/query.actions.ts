@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
 import { CameraPhoto } from '@capacitor/core';
+import { ImageRecognitionQueryRequest, ImageRecognitionQueryResponse } from '../shared/api';
 
 export enum QueryActionTypes {
   TakePhoto = '[Query] Take Photo',
@@ -8,6 +9,7 @@ export enum QueryActionTypes {
   CloseAnalyzingModal = '[Query] Close Analyzing Modal',
   QueryImageRecognition = '[Query] Query Image Recognition',
   CancelImageRecognition = '[Query] Cancel Query Image Recognition',
+  SetImageRecognitionQueryResult = '[Query] Set Image Recognition Query REsult',
 }
 
 export class TakePhotoAction implements Action {
@@ -34,6 +36,12 @@ export class QueryImageRecognitionAction implements Action {
   constructor(public payload: CameraPhoto) { }
 }
 
+export class SetImageRecognitionQueryResultAction implements Action {
+  readonly type = QueryActionTypes.SetImageRecognitionQueryResult;
+
+  constructor(public payload: ImageRecognitionQueryResponse) { }
+}
+
 export class CancelQueryImageRecognitionAction implements Action {
   readonly type = QueryActionTypes.CancelImageRecognition;
 }
@@ -44,4 +52,5 @@ export type QueryActions =
   OpenAnalyzingModalAction |
   CloseAnalyzingModalAction |
   QueryImageRecognitionAction |
+  SetImageRecognitionQueryResultAction |
   CancelQueryImageRecognitionAction;

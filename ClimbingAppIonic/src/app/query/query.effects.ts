@@ -9,6 +9,7 @@ import {
   SetPhotoAction,
   OpenAnalyzingModalAction,
   CloseAnalyzingModalAction,
+  SetImageRecognitionQueryResultAction,
 } from './query.actions';
 import { switchMap, flatMap, catchError, tap, startWith } from 'rxjs/operators';
 import { empty, defer, of, concat } from 'rxjs';
@@ -18,6 +19,7 @@ import { AnalyzingPage } from './analyzing';
 import { IncreaseRequestSemaphoreAction, DecreaseRequestSemaphoreAction } from '../app.actions';
 import { GoAction } from '../router.actions';
 import { Action } from '@ngrx/store';
+import { SetSelectedClimbingRouteAction } from '../climbing-route/climbing-route.actions';
 
 @Injectable()
 export class QueryEffects {
@@ -61,9 +63,16 @@ export class QueryEffects {
           this.climbingRouteService.query(mapPhotoToQuery((a as QueryImageRecognitionAction).payload)).pipe(
             flatMap(result => {
               if ( result.result === 'Match') {
-                return [new GoAction({ path: ['/sites', 'routes', result.climbingSite.id]})];
+                return [
+                  new SetImageRecognitionQueryResultAction(result),
+                  new SetSelectedClimbingRouteAction(result.climbingRoute),
+                  new GoAction({ path: ['/sites', 'routes', result.climbingRoute.id]}),
+                ];
               } else {
-                return [new GoAction({ path: ['/sites', 'create-route']})];
+                return [
+                  new SetImageRecognitionQueryResultAction(result),
+                  new GoAction({ path: ['/sites', 'create-route']})
+                ];
               }
             }),
             startWith(new IncreaseRequestSemaphoreAction()),

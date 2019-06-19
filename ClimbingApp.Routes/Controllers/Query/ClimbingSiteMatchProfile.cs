@@ -8,8 +8,7 @@ namespace ClimbingApp.Routes.Controllers.Query
     {
         public ClimbingSiteMatchProfile()
         {
-            CreateMap<ClimbingSite, ClimbingSiteMatch>()
-                .ForMember(dest => dest.Route, opt => opt.Ignore());
+            CreateMap<ClimbingSite, ClimbingSiteMatch>();
         }
     }
 }

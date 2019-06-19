@@ -16,5 +16,7 @@ namespace ClimbingApp.Routes.Controllers.Query
 
         [JsonConverter(typeof(StringEnumConverter))]
         public ClimbingRouteType Type { get; set; }
+
+        public ClimbingSiteMatch Site { get; set; }
     }
 }

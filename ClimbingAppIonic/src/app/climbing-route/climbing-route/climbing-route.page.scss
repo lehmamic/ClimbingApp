@@ -1,0 +1,13 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    padding: 1.1rem;
+
+    .image {
+        max-width: 30%;
+    }
+
+    .route-info {
+        padding-left: 1.1rem;
+    }
+}

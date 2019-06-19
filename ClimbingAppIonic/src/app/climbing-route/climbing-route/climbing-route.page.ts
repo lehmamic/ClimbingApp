@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { State } from 'src/app/app.reducer';
+import { Store, select } from '@ngrx/store';
+import { selectClimbingRouteState, SelectedClimbingRoute } from '../climbing-route.reducer';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-climbing-route',
@@ -7,8 +11,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ClimbingRoutePage implements OnInit {
 
-  constructor() { }
+  public climbingRoute$: Observable<SelectedClimbingRoute>;
 
-  ngOnInit() {}
+  constructor(private store: Store<State>) { }
+
+  ngOnInit() {
+    this.climbingRoute$ = this.store.pipe(
+      select((s) => selectClimbingRouteState(s).selected),
+    );
+  }
 
 }

@@ -1,3 +1,21 @@
-<p>
-  climbing-route works!
-</p>
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Image
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="container">
+    <mat-card class="image">Simple card</mat-card>
+    <div class="route-info">
+      <div>{{ (climbingRoute$ | async).site.name }}</div>
+      <div><h2>{{ (climbingRoute$ | async).name }}</h2></div>
+      <div>{{ (climbingRoute$ | async).grade }}</div>
+    </div>
+  </div>
+</ion-content>
