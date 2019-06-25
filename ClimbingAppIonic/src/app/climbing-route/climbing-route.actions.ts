@@ -1,5 +1,4 @@
 import { Action } from '@ngrx/store';
-import { ClimbingRouteMatch } from '../shared/api';
 import { SelectedClimbingRoute } from './climbing-route.reducer';
 
 export enum ClimbingRouteActionTypes {

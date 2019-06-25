@@ -14,6 +14,8 @@ namespace ClimbingApp.Routes.Controllers.Query
 
         public string Grade { get; set; }
 
+        public string ImageUri { get; set; }
+
         [JsonConverter(typeof(StringEnumConverter))]
         public ClimbingRouteType Type { get; set; }
 

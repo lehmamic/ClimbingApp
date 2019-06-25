@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using ClimbingApp.Routes.Entities;
 using ClimbingApp.Routes.Services.ImageRecognition;
+using ClimbingApp.Routes.Services.Media;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Raven.Client.Documents.Session;
@@ -17,13 +18,19 @@ namespace ClimbingApp.Routes.Controllers.ClimbingRoutes
     {
         private readonly IAsyncDocumentSession documentSession;
         private readonly IMapper mapper;
-        private readonly IImageRecognitionApiClient imageRecognition;
+        private readonly IImageRecognitionApiClient imageRecognitionApi;
+        private readonly IMediaApiClient mediaApi;
 
-        public RoutesController(IAsyncDocumentSession documentSession, IMapper mapper, IImageRecognitionApiClient imageRecognition)
+        public RoutesController(
+            IAsyncDocumentSession documentSession,
+            IMapper mapper,
+            IImageRecognitionApiClient imageRecognitionApi,
+            IMediaApiClient mediaApi)
         {
-            this.documentSession = documentSession ?? throw new System.ArgumentNullException(nameof(documentSession));
-            this.mapper = mapper ?? throw new System.ArgumentNullException(nameof(mapper));
-            this.imageRecognition = imageRecognition ?? throw new ArgumentNullException(nameof(imageRecognition));
+            this.documentSession = documentSession ?? throw new ArgumentNullException(nameof(documentSession));
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            this.imageRecognitionApi = imageRecognitionApi ?? throw new ArgumentNullException(nameof(imageRecognitionApi));
+            this.mediaApi = mediaApi ?? throw new ArgumentNullException(nameof(mediaApi));
         }
 
         [HttpGet]
@@ -75,6 +82,7 @@ namespace ClimbingApp.Routes.Controllers.ClimbingRoutes
             }
 
             ClimbingRoute route = this.mapper.Map<ClimbingRoute>(request);
+            route.ImageUri = $"api/v1/images/{route.Id}";
             site.Routes.Add(route);
 
             await this.documentSession.SaveChangesAsync();
@@ -84,7 +92,8 @@ namespace ClimbingApp.Routes.Controllers.ClimbingRoutes
             {
                 { ClimbingRoutesConstants.CLIMBING_ROUTE_ID_LABEL, route.Id },
             };
-            await this.imageRecognition.CreateTarget(request.Name, request.Description, labels, request.Image.Base64);
+            await this.imageRecognitionApi.CreateTarget(request.Name, request.Description, labels, request.Image.Base64);
+            await this.mediaApi.UploadImage(route.Id, request.Image.Base64);
 
             var response = this.mapper.Map<ClimbingRouteResponse>(route);
             return CreatedAtRoute("GetClimbingRoute", new { siteId, id = response.Id }, response);

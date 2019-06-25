@@ -9,7 +9,8 @@ namespace ClimbingApp.Routes.Controllers.ClimbingRoutes
         public UpdateClimbingRouteRequestProfile()
         {
             this.CreateMap<UpdateClimbingRouteRequest, ClimbingRoute>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore());
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.ImageUri, opt => opt.Ignore());
         }
     }
 }

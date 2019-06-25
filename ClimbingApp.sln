@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClimbingApp.ImageRecognitio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClimbingApp.Routes", "ClimbingApp.Routes\ClimbingApp.Routes.csproj", "{7E014560-349C-4F65-849B-04EB5DDA6B17}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClimbingApp.Media", "ClimbingApp.Media\ClimbingApp.Media.csproj", "{FD23774D-7B99-403D-8FC3-D4BD9C25C568}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{7E014560-349C-4F65-849B-04EB5DDA6B17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E014560-349C-4F65-849B-04EB5DDA6B17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E014560-349C-4F65-849B-04EB5DDA6B17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD23774D-7B99-403D-8FC3-D4BD9C25C568}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD23774D-7B99-403D-8FC3-D4BD9C25C568}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD23774D-7B99-403D-8FC3-D4BD9C25C568}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD23774D-7B99-403D-8FC3-D4BD9C25C568}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0

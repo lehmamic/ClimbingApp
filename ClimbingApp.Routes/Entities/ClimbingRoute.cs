@@ -11,5 +11,7 @@
         public string Grade { get; set; }
 
         public ClimbingRouteType Type { get; set; }
+
+        public string ImageUri { get; set; }
     }
 }

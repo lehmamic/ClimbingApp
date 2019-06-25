@@ -1,5 +1,4 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using ClimbingApp.Routes.Entities;
 
 namespace ClimbingApp.Routes.Controllers.Query

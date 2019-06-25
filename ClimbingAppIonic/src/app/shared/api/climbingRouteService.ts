@@ -30,6 +30,7 @@ export interface ClimbingRouteMatch {
     grade: string;
     type: ClimbingRouteType;
     site: ClimbingSiteMatch;
+    imageUri: string;
 }
 
 export interface ClimbingSiteMatch {

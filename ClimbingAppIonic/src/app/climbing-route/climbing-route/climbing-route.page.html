@@ -4,14 +4,16 @@
       <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title>
-      Image
+        {{ (climbingRoute$ | async).name }} {{ (climbingRoute$ | async).grade }}
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <div class="container">
-    <mat-card class="image">Simple card</mat-card>
+    <mat-card class="image">
+      <img [src]="imageUri$ | async">
+    </mat-card>
     <div class="route-info">
       <div>{{ (climbingRoute$ | async).site.name }}</div>
       <div><h2>{{ (climbingRoute$ | async).name }}</h2></div>

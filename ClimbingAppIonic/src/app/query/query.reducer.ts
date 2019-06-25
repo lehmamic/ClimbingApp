@@ -19,6 +19,7 @@ export const initialQueryState: QueryState = {
       description: '',
       grade: '',
       type: 'SportClimbing',
+      imageUri: '',
       site: {
         id: '',
         name: '',

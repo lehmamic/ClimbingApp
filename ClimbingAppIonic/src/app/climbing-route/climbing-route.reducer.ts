@@ -16,6 +16,7 @@ export interface SelectedClimbingRoute {
   description: string;
   grade: string;
   type: ClimbingRouteType;
+  imageUri: string;
   site: ClimbingSite;
 }
 
@@ -32,6 +33,7 @@ export const initialClimbingRouteState: ClimbingRouteState = {
     description: '',
     grade: '',
     type: 'SportClimbing',
+    imageUri: '',
     site: {
       id: '',
       name: '',

@@ -19,6 +19,7 @@
     <Folder Include="Controllers\Query\" />
     <Folder Include="Services\" />
     <Folder Include="Services\ImageRecognition\" />
+    <Folder Include="Services\Media\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Controllers\ValuesController.cs" />

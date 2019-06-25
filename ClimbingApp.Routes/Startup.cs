@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using ClimbingApp.Routes.Services.ImageRecognition;
+using ClimbingApp.Routes.Services.Media;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Raven.Client.Documents;
-using Raven.Client.Documents.Session;
 
 namespace ClimbingApp.Routes
 {
@@ -34,7 +27,8 @@ namespace ClimbingApp.Routes
                 return new DocumentStore { Urls = new[] { "http://localhost:8080" } }.Initialize();
             });
 
-            services.AddScoped((serviceProvider) => {
+            services.AddScoped((serviceProvider) =>
+            {
                 var store = serviceProvider.GetService<IDocumentStore>();
                 return store.OpenAsyncSession(new Raven.Client.Documents.Session.SessionOptions
                 {
@@ -60,6 +54,7 @@ namespace ClimbingApp.Routes
             });
 
             services.AddHttpClient<IImageRecognitionApiClient, ImageRecognitionApiClient>();
+            services.AddHttpClient<IMediaApiClient, MediaApiClient>();
 
             services.AddCors(options =>
             {
