@@ -12,7 +12,6 @@ namespace ClimbingApp.Routes.Controllers.ClimbingRoutes
         public string Description { get; set; }
 
         [Required]
-        [RegularExpression("[0-9][abcABC]")]
         public string Grade { get; set; }
 
         [Required]

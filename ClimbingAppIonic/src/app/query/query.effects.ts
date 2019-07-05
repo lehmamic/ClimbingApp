@@ -19,7 +19,7 @@ import { AnalyzingPage } from './analyzing';
 import { IncreaseRequestSemaphoreAction, DecreaseRequestSemaphoreAction } from '../app.actions';
 import { GoAction } from '../router.actions';
 import { Action } from '@ngrx/store';
-import { SetSelectedClimbingRouteAction } from '../climbing-route/climbing-route.actions';
+import { SetSelectedClimbingRouteAction, SetProposedClimbingRouteAction } from '../climbing-route/climbing-route.actions';
 
 @Injectable()
 export class QueryEffects {
@@ -71,6 +71,12 @@ export class QueryEffects {
               } else {
                 return [
                   new SetImageRecognitionQueryResultAction(result),
+                  new SetProposedClimbingRouteAction({
+                    ...result.climbingRoute,
+                    image: {
+                      base64: (a as QueryImageRecognitionAction).payload.base64String,
+                    }
+                  }),
                   new GoAction({ path: ['/sites', 'create-route']})
                 ];
               }
@@ -79,7 +85,7 @@ export class QueryEffects {
             catchError((error) => {
               console.log(JSON.stringify(error));
               return empty();
-            })
+            }),
           ),
         of(
           new DecreaseRequestSemaphoreAction(),

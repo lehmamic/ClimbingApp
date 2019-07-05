@@ -31,7 +31,7 @@ namespace ClimbingApp.Routes.Services.Media
                 Base64 = base64,
             };
 
-            HttpResponseMessage response = await this.httpClient.PostAsJsonAsync("http://localhost:5002/api/v1/images", request);
+            HttpResponseMessage response = await this.httpClient.PostAsJsonAsync("http://localhost:5003/api/v1/images", request);
             if (!response.IsSuccessStatusCode)
             {
                 throw new InvalidOperationException();

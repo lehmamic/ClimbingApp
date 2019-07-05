@@ -9,6 +9,7 @@ import { ClimbingRouteEffects } from './climbing-route.effects';
 import * as climbingRouteReducer from './climbing-route.reducer';
 import { ClimbingRoutePage } from './climbing-route';
 import { CreateClimbingRoutePage } from './create-climbing-route';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { CreateClimbingRoutePage } from './create-climbing-route';
   ],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     MatCardModule,
     ClimbingRouteRoutingModule,
     IonicModule,

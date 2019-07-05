@@ -10,5 +10,37 @@
 </ion-header>
 
 <ion-content>
+  <form [formGroup]="climbingRouteForm">
+    <ion-card>
+      <ion-card-content>
+        <img [src]="imageUrl$ | async">
+      </ion-card-content>
+    </ion-card>
+    <ion-select placeholder="Select a climbing site" formControlName="siteId">
+      <ion-select-option *ngFor="let site of (climbingSites$ | async)" [value]="site.id">{{ site.name }}</ion-select-option>
+    </ion-select>
+    <ion-item>
+      <ion-label position="floating">Site name</ion-label>
+      <ion-input type="text" formControlName="siteName"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Route name</ion-label>
+      <ion-input type="text" formControlName="name"></ion-input>
+    </ion-item>
+    <ion-select placeholder="Select a route type" formControlName="type">
+      <ion-select-option value="SportClimbing">Sport Climbing</ion-select-option>
+      <ion-select-option value="Bouldering">Bouldering</ion-select-option>
+    </ion-select>
+    <ion-item>
+      <ion-label position="floating">Grade</ion-label>
+      <ion-input type="text" formControlName="grade"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Description</ion-label>
+      <ion-textarea formControlName="description"></ion-textarea>
+    </ion-item>
+  </form>
+
+  <ion-button expand="full" (click)="createClimbingRoute()" [disabled]="climbingRouteForm.invalid">Save</ion-button>
 
 </ion-content>
