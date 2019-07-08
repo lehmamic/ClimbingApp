@@ -7,6 +7,8 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Formatting.Elasticsearch;
 
 namespace ClimbingApp.ImageRecognition
 {
@@ -19,6 +21,21 @@ namespace ClimbingApp.ImageRecognition
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseSerilog((ctx, config) =>
+                {
+                    config
+                        .MinimumLevel.Debug()
+                        .Enrich.FromLogContext();
+
+                    if (ctx.HostingEnvironment.IsDevelopment())
+                    {
+                        config.WriteTo.Console();
+                    }
+                    else
+                    {
+                        config.WriteTo.Console(new ElasticsearchJsonFormatter());
+                    }
+                })
                 .UseStartup<Startup>();
     }
 }
