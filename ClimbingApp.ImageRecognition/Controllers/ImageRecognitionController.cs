@@ -36,7 +36,7 @@ namespace ClimbingApp.ImageRecognition.Controllers
             //var options = new CreateProductSetsOptions
             //{
             //    ProjectID = "climbingapp-241211",
-            //    ComputeRegion = "europe-west1",
+            //    ComputeRegion = this.options.Value.LocationId,
             //    ProductSetId = "climbing-routes-1",
             //    ProductSetDisplayName = "ClimbingRoutes",
             //};

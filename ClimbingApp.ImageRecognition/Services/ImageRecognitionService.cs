@@ -11,6 +11,7 @@ using Google.Cloud.Vision.V1;
 using Grpc.Auth;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using static Google.Cloud.Vision.V1.Product.Types;
 
 namespace ClimbingApp.ImageRecognition.Services
@@ -19,11 +20,13 @@ namespace ClimbingApp.ImageRecognition.Services
     {
         private readonly IMapper mapper;
         private readonly ILogger logger;
+        private readonly IOptions<GoogleCloudSettings> options;
 
-        public ImageRecognitionService(IMapper mapper, ILogger<ImageRecognitionService> logger)
+        public ImageRecognitionService(IMapper mapper, ILogger<ImageRecognitionService> logger, IOptions<GoogleCloudSettings> options)
         {
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
         public async Task GetTargetSets()
@@ -54,14 +57,14 @@ namespace ClimbingApp.ImageRecognition.Services
             {
                 var client = ProductSearchClient.Create(channel);
 
-                var options = new CreateProductSetsOptions
+                var createProductSetOptions = new CreateProductSetsOptions
                 {
-                    ProjectID = "climbingapp-241211",
-                    ComputeRegion = "europe-west1",
+                    ProjectID = this.options.Value.ProjectId,
+                    ComputeRegion = this.options.Value.LocationId,
                     ProductSetId = targetSetId,
                     ProductSetDisplayName = displayName,
                 };
-                var productSet = await this.CreateProductSet(client, options);
+                var productSet = await this.CreateProductSet(client, createProductSetOptions);
             }
             finally
             {
@@ -80,7 +83,7 @@ namespace ClimbingApp.ImageRecognition.Services
 
                 ListProductsInProductSetRequest request = new ListProductsInProductSetRequest
                 {
-                    ProductSetName = new ProductSetName("climbingapp-241211", "europe-west1", targetSetId),
+                    ProductSetName = new ProductSetName(this.options.Value.ProjectId, this.options.Value.LocationId, targetSetId),
                     PageSize = pageSize,
                 };
 
@@ -126,8 +129,8 @@ namespace ClimbingApp.ImageRecognition.Services
                 string productId = Guid.NewGuid().ToString();
                 var createProductOptions = new CreateProductOptions
                 {
-                    ProjectID = "climbingapp-241211",
-                    ComputeRegion = "europe-west1",
+                    ProjectID = this.options.Value.ProjectId,
+                    ComputeRegion = this.options.Value.LocationId,
                     ProductID = productId,
                     ProductCategory = "apparel",
                     DisplayName = displayName,
@@ -138,23 +141,23 @@ namespace ClimbingApp.ImageRecognition.Services
 
                 var addProductOptions = new AddProductToProductSetOptions
                 {
-                    ProjectID = "climbingapp-241211",
-                    ComputeRegion = "europe-west1",
+                    ProjectID = this.options.Value.ProjectId,
+                    ComputeRegion = this.options.Value.LocationId,
                     ProductID = product.ProductName.ProductId,
-                    ProductSetId = "climbing-routes-1",
+                    ProductSetId = this.options.Value.ProductSetId,
                 };
                 await this.AddProductToProductSet(client, addProductOptions);
 
                 string referenceImageId = Guid.NewGuid().ToString();
-                await this.UploadFile(storage, "climbing-routes-images", referenceImageId, referenceImageBinaries);
+                await this.UploadFile(storage, this.options.Value.StorageBucketName, referenceImageId, referenceImageBinaries);
 
                 var createReferenceImageOptions = new CreateReferenceImageOptions
                 {
-                    ProjectID = "climbingapp-241211",
-                    ComputeRegion = "europe-west1",
+                    ProjectID = this.options.Value.ProjectId,
+                    ComputeRegion = this.options.Value.LocationId,
                     ProductID = product.ProductName.ProductId,
                     ReferenceImageID = referenceImageId,
-                    ReferenceImageURI = $"gs://climbing-routes-images/{referenceImageId}",
+                    ReferenceImageURI = $"gs://{this.options.Value.StorageBucketName}/{referenceImageId}",
                 };
                 Google.Cloud.Vision.V1.ReferenceImage referenceImage = await this.CreateReferenceImage(client, createReferenceImageOptions);
 
@@ -183,7 +186,7 @@ namespace ClimbingApp.ImageRecognition.Services
                 await Task.WhenAll(referenceImages.Select(async r =>
                 {
                     await this.DeleteReferenceImage(client, targetId, r.ReferenceImageName.ReferenceImageId);
-                    await this.DeleteFile(storage, "climbing-routes-images", r.ReferenceImageName.ReferenceImageId);
+                    await this.DeleteFile(storage, this.options.Value.StorageBucketName, r.ReferenceImageName.ReferenceImageId);
                 }));
 
                 await this.RemoveProductFromProductSet(client, targetSetId, targetId);
@@ -207,9 +210,9 @@ namespace ClimbingApp.ImageRecognition.Services
 
                 var options = new GetSimilarProductsOptions
                 {
-                    ProjectID = "climbingapp-241211",
-                    ComputeRegion = "europe-west1",
-                    ProductSetId = "climbing-routes-1",
+                    ProjectID = this.options.Value.ProjectId,
+                    ComputeRegion = this.options.Value.LocationId,
+                    ProductSetId = this.options.Value.ProductSetId,
                     ProductCategory = "apparel",
                     Filter = string.Empty,
                     ImageBinaries = image,
@@ -256,7 +259,7 @@ namespace ClimbingApp.ImageRecognition.Services
         //{
         //    var request = new ListProductSetsRequest
         //    {
-        //        ParentAsLocationName = new LocationName("climbingapp-241211", "europe-west1"),
+        //        ParentAsLocationName = new LocationName(this.options.Value.ProjectId, this.options.Value.LocationId),
         //        PageSize = pageSize,
         //    };
 
@@ -294,7 +297,7 @@ namespace ClimbingApp.ImageRecognition.Services
         {
             var request = new GetProductRequest
             {
-                ProductName = new ProductName("climbingapp-241211", "europe-west1", productId),
+                ProductName = new ProductName(this.options.Value.ProjectId, this.options.Value.LocationId, productId),
             };
 
             return await client.GetProductAsync(request);
@@ -304,7 +307,7 @@ namespace ClimbingApp.ImageRecognition.Services
         {
             var request = new DeleteProductRequest
             {
-                ProductName = new ProductName("climbingapp-241211", "europe-west1", productId),
+                ProductName = new ProductName(this.options.Value.ProjectId, this.options.Value.LocationId, productId),
             };
 
             await client.DeleteProductAsync(request);
@@ -327,8 +330,8 @@ namespace ClimbingApp.ImageRecognition.Services
         {
             var request = new RemoveProductFromProductSetRequest
             {
-                ProductSetName = new ProductSetName("climbingapp-241211", "europe-west1", productSetId),
-                ProductAsProductName = new ProductName("climbingapp-241211", "europe-west1", productId),
+                ProductSetName = new ProductSetName(this.options.Value.ProjectId, this.options.Value.LocationId, productSetId),
+                ProductAsProductName = new ProductName(this.options.Value.ProjectId, this.options.Value.LocationId, productId),
             };
 
             await client.RemoveProductFromProductSetAsync(request);
@@ -357,7 +360,7 @@ namespace ClimbingApp.ImageRecognition.Services
         {
             var request = new DeleteReferenceImageRequest
             {
-                ReferenceImageName = new ReferenceImageName("climbingapp-241211", "europe-west1", productId, referenceImageId)
+                ReferenceImageName = new ReferenceImageName(this.options.Value.ProjectId, this.options.Value.LocationId, productId, referenceImageId)
             };
 
             await client.DeleteReferenceImageAsync(request);
@@ -378,7 +381,7 @@ namespace ClimbingApp.ImageRecognition.Services
 
         private GoogleCredential CreateCredentials()
         {
-            return GoogleCredential.FromFile("../ClimbingApp-8385749116e7.json");
+            return GoogleCredential.FromFile(this.options.Value.CredentialsFile);
         }
 
         private async Task<TargetSearchResults> GetSimilarProductsFile(ImageAnnotatorClient imageAnnotatorClient, GetSimilarProductsOptions opts)
@@ -426,7 +429,7 @@ namespace ClimbingApp.ImageRecognition.Services
         {
             ListReferenceImagesRequest referenceImageRequest = new ListReferenceImagesRequest
             {
-                ParentAsProductName = new ProductName("climbingapp-241211", "europe-west1", productId),
+                ParentAsProductName = new ProductName(this.options.Value.ProjectId, this.options.Value.LocationId, productId),
                 PageSize = pageSize,
             };
 

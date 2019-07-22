@@ -6,6 +6,7 @@ using AutoMapper;
 using ClimbingApp.ImageRecognition.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace ClimbingApp.ImageRecognition.Controllers
 {
@@ -15,18 +16,20 @@ namespace ClimbingApp.ImageRecognition.Controllers
     {
         private readonly IImageRecognitionService imageRecognition;
         private readonly IMapper mapper;
+        private readonly IOptions<GoogleCloudSettings> options;
 
-        public TargetsController(IImageRecognitionService imageRecognition, IMapper mapper)
+        public TargetsController(IImageRecognitionService imageRecognition, IMapper mapper, IOptions<GoogleCloudSettings> options)
         {
             this.imageRecognition = imageRecognition ?? throw new ArgumentNullException(nameof(imageRecognition));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            this.options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<TargetResponse>>> GetTargets()
         {
-            IEnumerable<Target> targets = await this.imageRecognition.GetTargets("climbing-routes-1", 0, 10);
+            IEnumerable<Target> targets = await this.imageRecognition.GetTargets(this.options.Value.ProductSetId, 0, 10);
             IEnumerable<TargetResponse> response = this.mapper.Map<IEnumerable<TargetResponse>>(targets);
 
             return Ok(response);
@@ -62,7 +65,7 @@ namespace ClimbingApp.ImageRecognition.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> DeleteTarget(string id)
         {
-            await this.imageRecognition.DeleteTarget("climbing-routes-1", id);
+            await this.imageRecognition.DeleteTarget(this.options.Value.ProductSetId, id);
             return NoContent();
         }
     }
