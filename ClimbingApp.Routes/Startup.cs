@@ -24,7 +24,7 @@ namespace ClimbingApp.Routes
         {
             services.AddSingleton((serviceProvider) =>
             {
-                return new DocumentStore { Urls = new[] { "http://localhost:8080" } }.Initialize();
+                return new DocumentStore { Urls = new[] { this.Configuration.GetValue<string>("RavenDb:Url") } }.Initialize();
             });
 
             services.AddScoped((serviceProvider) =>
@@ -32,7 +32,7 @@ namespace ClimbingApp.Routes
                 var store = serviceProvider.GetService<IDocumentStore>();
                 return store.OpenAsyncSession(new Raven.Client.Documents.Session.SessionOptions
                 {
-                    Database = "ClimbingRoutes"
+                    Database = this.Configuration.GetValue<string>("RavenDb:Database"),
                 });
             });
 
@@ -53,7 +53,10 @@ namespace ClimbingApp.Routes
                 return new Mapper(config);
             });
 
+            services.Configure<ImageRecognitionApiSettings>(Configuration.GetSection("ImageRecognitionApi"));
             services.AddHttpClient<IImageRecognitionApiClient, ImageRecognitionApiClient>();
+
+            services.Configure<MediaApiSettings>(Configuration.GetSection("MediaApi"));
             services.AddHttpClient<IMediaApiClient, MediaApiClient>();
 
             services.AddCors(options =>

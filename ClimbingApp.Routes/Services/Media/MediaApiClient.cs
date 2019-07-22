@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 
 namespace ClimbingApp.Routes.Services.Media
 {
     public class MediaApiClient : IMediaApiClient
     {
         private readonly HttpClient httpClient;
+        private readonly IOptions<MediaApiSettings> options;
 
-        public MediaApiClient(HttpClient httpClient)
+        public MediaApiClient(HttpClient httpClient, IOptions<MediaApiSettings> options)
         {
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            this.options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
         public async Task UploadImage(string name, string base64)
@@ -31,7 +34,7 @@ namespace ClimbingApp.Routes.Services.Media
                 Base64 = base64,
             };
 
-            HttpResponseMessage response = await this.httpClient.PostAsJsonAsync("http://localhost:5003/api/v1/images", request);
+            HttpResponseMessage response = await this.httpClient.PostAsJsonAsync($"{this.options.Value.BaseUrl}/images", request);
             if (!response.IsSuccessStatusCode)
             {
                 throw new InvalidOperationException();

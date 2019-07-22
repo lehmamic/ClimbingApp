@@ -22,14 +22,14 @@ namespace ClimbingApp.Media
         {
             services.AddSingleton((serviceProvider) =>
             {
-                return new DocumentStore { Urls = new[] { "http://localhost:8080" } }.Initialize();
+                return new DocumentStore { Urls = new[] { this.Configuration.GetValue<string>("RavenDb:Url") } }.Initialize();
             });
 
             services.AddScoped((serviceProvider) => {
                 var store = serviceProvider.GetService<IDocumentStore>();
                 return store.OpenAsyncSession(new Raven.Client.Documents.Session.SessionOptions
                 {
-                    Database = "Media"
+                    Database = this.Configuration.GetValue<string>("RavenDb:Database")
                 });
             });
 

@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 
 namespace ClimbingApp.Routes.Services.ImageRecognition
 {
     public class ImageRecognitionApiClient : IImageRecognitionApiClient
     {
         private readonly HttpClient httpClient;
+        private readonly IOptions<ImageRecognitionApiSettings> options;
 
-        public ImageRecognitionApiClient(HttpClient httpClient)
+        public ImageRecognitionApiClient(HttpClient httpClient, IOptions<ImageRecognitionApiSettings> options)
         {
             this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            this.options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
         public async Task<TargetResponse> CreateTarget(string name, string description, IReadOnlyDictionary<string, string> labels, string base64Image)
@@ -37,7 +40,7 @@ namespace ClimbingApp.Routes.Services.ImageRecognition
                 },
             };
 
-            HttpResponseMessage response = await this.httpClient.PostAsJsonAsync("http://localhost:5001/api/v1/targets", request);
+            HttpResponseMessage response = await this.httpClient.PostAsJsonAsync($"{this.options.Value.BaseUrl}/targets", request);
             if (response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadAsAsync<TargetResponse>();
@@ -58,7 +61,7 @@ namespace ClimbingApp.Routes.Services.ImageRecognition
                 Image = new Image { Base64 = base64Image },
             };
 
-            HttpResponseMessage response = await this.httpClient.PostAsJsonAsync("http://localhost:5001/api/v1/query", request);
+            HttpResponseMessage response = await this.httpClient.PostAsJsonAsync($"{this.options.Value.BaseUrl}/query", request);
             if (response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadAsAsync<QueryResponse>();
